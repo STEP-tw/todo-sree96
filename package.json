@@ -1,0 +1,22 @@
+{
+  "name": "todo-sree96",
+  "version": "1.0.0",
+  "description": "## Objective",
+  "main": "server.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "chai" : "*"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/STEP-tw/todo-sree96/issues"
+  },
+  "homepage": "https://github.com/STEP-tw/todo-sree96#readme"
+}

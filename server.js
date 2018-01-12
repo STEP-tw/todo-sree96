@@ -111,6 +111,19 @@ app.get('/logout',(req,res)=>{
   res.redirect('/login.html');
 });
 
+app.post('/addNewTodo',(req,res)=>{
+  let toDoDetails=req.body;
+  let userName=req.user.userName;
+  let filePath=`./data/${userName}ToDos.json`;
+  let sendingFilePath=`./public/js/todos.js`;
+  let newToDoData={'description':`${req.body.description}`}
+  let currentContent=JSON.parse(fs.readFileSync(filePath,"utf-8"));
+  currentContent[`${req.body.title}`]=newToDoData;
+  fs.writeFileSync(filePath,JSON.stringify(currentContent));
+  fs.writeFileSync(sendingFilePath,`var todos=${JSON.stringify(currentContent)}`);
+  res.redirect('/home.html')
+})
+
 
 let server=http.createServer(app);
 server.listen(PORT);
