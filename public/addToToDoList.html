@@ -6,9 +6,10 @@
     <script src="./js/userName.js" charset="utf-8"></script>
     <script src="./js/addNameAndLogout.js" charset="utf-8"></script>
   </head>
-  <body>
+  <body onload="addNameAndLogout()">
     <b id="userName"></b><br />
     <a href="/logout">Logout</a>
+    <a href="/home.html">Home</a>
     <form action="/addNewItem" method="POST">
       Item: <input type="text" name="item" required><br/>
       <button type="submit">Add Item</button>

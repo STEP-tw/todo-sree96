@@ -6,9 +6,10 @@
     <script src="./js/userName.js" charset="utf-8"></script>
     <script src="./js/addNameAndLogout.js" charset="utf-8"></script>
   </head>
-  <body>
+  <body onload="addNameAndLogout()">
     <b id="userName"></b><br />
     <a href="/logout">Logout</a>
+    <a href="/home.html">Home</a>
     <form action="/addNewTodo" method="POST">
       Title: <input type="text" name="title" required><br />
       Description: <textarea name="description" rows="8" cols="80"></textarea><br />
