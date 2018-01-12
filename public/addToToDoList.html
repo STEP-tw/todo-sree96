@@ -2,15 +2,15 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>ALL TODOS</title>
-    <script src="./js/todos.js" charset="utf-8"></script>
-    <script src="./js/showAllToDos.js" charset="utf-8"></script>
+    <title>Add new item</title>
     <script src="./js/userName.js" charset="utf-8"></script>
     <script src="./js/addNameAndLogout.js" charset="utf-8"></script>
   </head>
-  <body onload="showAllToDos()">
+  <body>
     <b id="userName"></b><br />
     <a href="/logout">Logout</a>
-    <p id='allToDoList'></p>
+    <form action="/addNewItem" method="POST">
+      Item: <input type="text" name="item" required><br/>
+      <button type="submit">Add Item</button>
   </body>
 </html>

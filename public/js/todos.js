@@ -1,1 +1,1 @@
-var todos={"second":{"description":"description"},"sudhin":{"description":"test"}}
+var todos={"todo":{"description":"sample","itemList":["take+notes","take+breaks","commit+regularly"]}}

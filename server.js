@@ -156,16 +156,28 @@ app.get('/logout',(req,res)=>{
 });
 
 app.post('/addNewTodo',(req,res)=>{
-  let toDoDetails=req.body;
   let userName=req.user.userName;
   let filePath=`./data/${userName}ToDos.json`;
   let sendingFilePath=`./public/js/todos.js`;
-  let newToDoData={'description':`${req.body.description}`}
+  let newToDoData={'description':`${req.body.description}`,'itemList':[]};
   let currentContent=JSON.parse(fs.readFileSync(filePath,"utf-8"));
   currentContent[`${req.body.title}`]=newToDoData;
   fs.writeFileSync(filePath,JSON.stringify(currentContent));
   fs.writeFileSync(sendingFilePath,`var todos=${JSON.stringify(currentContent)}`);
   res.redirect('/home.html')
+})
+
+app.post('/addNewItem',(req,res)=>{
+  let userName=req.user.userName;
+  let filePath=`./data/${userName}ToDos.json`;
+  let sendingFilePath=`./public/js/todos.js`;
+  let title=req.cookies.title;
+  let newToDoItem=req.body.item;
+  let currentContent=JSON.parse(fs.readFileSync(filePath,"utf-8"));
+  currentContent[title].itemList.push(newToDoItem);
+  fs.writeFileSync(filePath,JSON.stringify(currentContent));
+  fs.writeFileSync(sendingFilePath,`var todos=${JSON.stringify(currentContent)}`);
+  res.redirect('/showSingleToDo');
 })
 
 

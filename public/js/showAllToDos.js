@@ -3,7 +3,7 @@ const showAllToDos=function () {
   let titles=Object.keys(todos);
   let innerHtml='';
   titles.forEach(function (title) {
-    innerHtml+=`<ul><a href='/getClickedToDo${title}'>${title}</a><li>${JSON.stringify(todos[title],null,2)}</li></ul>`
+    innerHtml+=`<ul><a href='/getClickedToDo${title}'>${title}</a><li>${todos[title].description }</li></ul>`
   });
   allToDoList.innerHTML=innerHtml;
 }
