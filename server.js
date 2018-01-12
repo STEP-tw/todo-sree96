@@ -13,6 +13,7 @@ let contentTypes={
   'gif':"image/gif",
   'css':"text/css",
   'png':"image/png",
+  'ico':"icon/ico",
   'pdf':"application/pdf",
   'js':"text/javascript",
 };
@@ -23,7 +24,7 @@ const timeStamp = ()=>{
   return `${t.toDateString()} ${t.toLocaleTimeString()}`;
 }
 
-let logRequest = (req,res)=>{
+const logRequest = (req,res)=>{
   let text = ['------------------------------',
     `${timeStamp()}`,
     `${req.method} ${req.url}`,
@@ -72,9 +73,36 @@ const loadUser = (req,res)=>{
   }
 };
 
+const titleSpliter=function (req) {
+  let url=req.url;
+  return url.split('/getClickedToDo')[1];
+}
+
+const gotoToDo=(req,res)=>{
+  if (req.url.startsWith("/getClickedToDo")) {
+    if (!req.user) {
+      res.redirect('/fileNotFound.html')
+    }
+    let title=titleSpliter(req);
+    res.setHeader('Set-Cookie',`title=${title}`)
+    res.redirect('/showSingleToDo');
+  }
+  return;
+}
+
 app.use(logRequest)
 app.use(loadUser);
+
+app.addPostprocess(gotoToDo);
 app.addPostprocess(writeToPage);
+
+app.get('/showSingleToDo',(req,res)=>{
+  let filePath=`./data/${req.user.userName}ToDos.json`;
+  let allToDos=JSON.parse(fs.readFileSync(filePath,"utf-8"));
+  let wantedToDo=allToDos[req.cookies.title];
+  fs.writeFileSync('./public/js/toDoContent.js',`var toDoContent=${JSON.stringify(wantedToDo)}`);
+  res.redirect('/showSingleToDo.html');
+});
 
 app.get('/',(req,res)=>{
   if (req.user) {
@@ -101,7 +129,11 @@ app.post('/login',(req,res)=>{
   let sessionid = new Date().getTime();
   res.setHeader('Set-Cookie',`sessionid=${sessionid}`);
   user.sessionid = sessionid;
-  fs.writeFileSync('./public/js/userName.js',`var user="Hello ${user.name}"`)
+  let filePath=`./data/${user.userName}ToDos.json`;
+  let sendingFilePath=`./public/js/todos.js`;
+  let currentContent=JSON.parse(fs.readFileSync(filePath,"utf-8"));
+  fs.writeFileSync(sendingFilePath,`var todos=${JSON.stringify(currentContent)}`);
+  fs.writeFileSync('./public/js/userName.js',`var user="Hello ${user.name}"`);
   res.redirect('/home.html');
 });
 
