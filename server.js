@@ -12,8 +12,27 @@ let contentTypes={
   'jpg':"image/jpeg",
   'gif':"image/gif",
   'css':"text/css",
+  'png':"image/png",
   'pdf':"application/pdf",
   'js':"text/javascript",
+};
+const toS = o=>JSON.stringify(o,null,2);
+
+const timeStamp = ()=>{
+  let t = new Date();
+  return `${t.toDateString()} ${t.toLocaleTimeString()}`;
+}
+
+let logRequest = (req,res)=>{
+  let text = ['------------------------------',
+    `${timeStamp()}`,
+    `${req.method} ${req.url}`,
+    `HEADERS=> ${toS(req.headers)}`,
+    `COOKIES=> ${toS(req.cookies)}`,
+    `BODY=> ${toS(req.body)}`,''].join('\n');
+  fs.appendFile('./logs/request.log',text,()=>{});
+
+  console.log(`${req.method} ${req.url}`);
 };
 
 const getContentType=function (resourcePath) {
@@ -35,7 +54,7 @@ const writeToPage=function (req,res) {
     res.end();
   } catch (e) {
     res.statusCode = 404;
-    res.write('File not found!');
+    res.redirect('/fileNotFound.html');
     res.end();
     return;
   }
@@ -49,6 +68,7 @@ const loadUser = (req,res)=>{
   }
 };
 
+app.use(logRequest)
 app.use(loadUser);
 app.addPostprocess(writeToPage);
 
@@ -86,14 +106,6 @@ app.get('/logout',(req,res)=>{
   res.redirect('/login.html');
 });
 
-app.post('/comment',(req,res)=>{
-  if (req.user) {
-    storeComments(req.body);
-    res.redirect('/guestBook.html');
-    return ;
-  }
-  res.redirect('/login');
-})
 
 let server=http.createServer(app);
 server.listen(PORT);

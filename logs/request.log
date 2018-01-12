@@ -1,0 +1,444 @@
+------------------------------
+Fri Jan 12 2018 1:53:44 PM
+GET /fileNotFound.html
+HEADERS=> {
+  "host": "localhost:8004",
+  "connection": "keep-alive",
+  "cache-control": "max-age=0",
+  "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.84 Safari/537.36",
+  "upgrade-insecure-requests": "1",
+  "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
+  "accept-encoding": "gzip, deflate, br",
+  "accept-language": "en-US,en;q=0.9",
+  "cookie": "logInFailed=true; loginFailed=false; sessionid=1515744209847"
+}
+COOKIES=> {
+  "logInFailed": "true",
+  "loginFailed": "false",
+  "sessionid": "1515744209847"
+}
+BODY=> {}
+------------------------------
+Fri Jan 12 2018 1:53:44 PM
+GET /css/fileNotFound.css
+HEADERS=> {
+  "host": "localhost:8004",
+  "connection": "keep-alive",
+  "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.84 Safari/537.36",
+  "accept": "text/css,*/*;q=0.1",
+  "referer": "http://localhost:8004/fileNotFound.html",
+  "accept-encoding": "gzip, deflate, br",
+  "accept-language": "en-US,en;q=0.9",
+  "cookie": "logInFailed=true; loginFailed=false; sessionid=1515744209847"
+}
+COOKIES=> {
+  "logInFailed": "true",
+  "loginFailed": "false",
+  "sessionid": "1515744209847"
+}
+BODY=> {}
+------------------------------
+Fri Jan 12 2018 1:53:44 PM
+GET /res/notFound.png
+HEADERS=> {
+  "host": "localhost:8004",
+  "connection": "keep-alive",
+  "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.84 Safari/537.36",
+  "accept": "image/webp,image/apng,image/*,*/*;q=0.8",
+  "referer": "http://localhost:8004/fileNotFound.html",
+  "accept-encoding": "gzip, deflate, br",
+  "accept-language": "en-US,en;q=0.9",
+  "cookie": "logInFailed=true; loginFailed=false; sessionid=1515744209847"
+}
+COOKIES=> {
+  "logInFailed": "true",
+  "loginFailed": "false",
+  "sessionid": "1515744209847"
+}
+BODY=> {}
+------------------------------
+Fri Jan 12 2018 1:53:44 PM
+GET /fileNotFound.html
+HEADERS=> {
+  "host": "localhost:8004",
+  "connection": "keep-alive",
+  "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.84 Safari/537.36",
+  "accept": "image/webp,image/apng,image/*,*/*;q=0.8",
+  "referer": "http://localhost:8004/fileNotFound.html",
+  "accept-encoding": "gzip, deflate, br",
+  "accept-language": "en-US,en;q=0.9",
+  "cookie": "logInFailed=true; loginFailed=false; sessionid=1515744209847"
+}
+COOKIES=> {
+  "logInFailed": "true",
+  "loginFailed": "false",
+  "sessionid": "1515744209847"
+}
+BODY=> {}
+------------------------------
+Fri Jan 12 2018 1:55:40 PM
+GET /fileNotFound.html
+HEADERS=> {
+  "host": "localhost:8004",
+  "connection": "keep-alive",
+  "cache-control": "max-age=0",
+  "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.84 Safari/537.36",
+  "upgrade-insecure-requests": "1",
+  "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
+  "accept-encoding": "gzip, deflate, br",
+  "accept-language": "en-US,en;q=0.9",
+  "cookie": "logInFailed=true; loginFailed=false; sessionid=1515744209847"
+}
+COOKIES=> {
+  "logInFailed": "true",
+  "loginFailed": "false",
+  "sessionid": "1515744209847"
+}
+BODY=> {}
+------------------------------
+Fri Jan 12 2018 1:55:40 PM
+GET /css/fileNotFound.css
+HEADERS=> {
+  "host": "localhost:8004",
+  "connection": "keep-alive",
+  "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.84 Safari/537.36",
+  "accept": "text/css,*/*;q=0.1",
+  "referer": "http://localhost:8004/fileNotFound.html",
+  "accept-encoding": "gzip, deflate, br",
+  "accept-language": "en-US,en;q=0.9",
+  "cookie": "logInFailed=true; loginFailed=false; sessionid=1515744209847"
+}
+COOKIES=> {
+  "logInFailed": "true",
+  "loginFailed": "false",
+  "sessionid": "1515744209847"
+}
+BODY=> {}
+------------------------------
+Fri Jan 12 2018 1:55:40 PM
+GET /res/notFound.png
+HEADERS=> {
+  "host": "localhost:8004",
+  "connection": "keep-alive",
+  "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.84 Safari/537.36",
+  "accept": "image/webp,image/apng,image/*,*/*;q=0.8",
+  "referer": "http://localhost:8004/fileNotFound.html",
+  "accept-encoding": "gzip, deflate, br",
+  "accept-language": "en-US,en;q=0.9",
+  "cookie": "logInFailed=true; loginFailed=false; sessionid=1515744209847"
+}
+COOKIES=> {
+  "logInFailed": "true",
+  "loginFailed": "false",
+  "sessionid": "1515744209847"
+}
+BODY=> {}
+------------------------------
+Fri Jan 12 2018 1:55:40 PM
+GET /fileNotFound.html
+HEADERS=> {
+  "host": "localhost:8004",
+  "connection": "keep-alive",
+  "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.84 Safari/537.36",
+  "accept": "image/webp,image/apng,image/*,*/*;q=0.8",
+  "referer": "http://localhost:8004/fileNotFound.html",
+  "accept-encoding": "gzip, deflate, br",
+  "accept-language": "en-US,en;q=0.9",
+  "cookie": "logInFailed=true; loginFailed=false; sessionid=1515744209847"
+}
+COOKIES=> {
+  "logInFailed": "true",
+  "loginFailed": "false",
+  "sessionid": "1515744209847"
+}
+BODY=> {}
+------------------------------
+Fri Jan 12 2018 1:55:48 PM
+GET /fileNotFound.html
+HEADERS=> {
+  "host": "localhost:8004",
+  "connection": "keep-alive",
+  "cache-control": "max-age=0",
+  "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.84 Safari/537.36",
+  "upgrade-insecure-requests": "1",
+  "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
+  "accept-encoding": "gzip, deflate, br",
+  "accept-language": "en-US,en;q=0.9",
+  "cookie": "logInFailed=true; loginFailed=false; sessionid=1515744209847"
+}
+COOKIES=> {
+  "logInFailed": "true",
+  "loginFailed": "false",
+  "sessionid": "1515744209847"
+}
+BODY=> {}
+------------------------------
+Fri Jan 12 2018 1:55:48 PM
+GET /css/fileNotFound.css
+HEADERS=> {
+  "host": "localhost:8004",
+  "connection": "keep-alive",
+  "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.84 Safari/537.36",
+  "accept": "text/css,*/*;q=0.1",
+  "referer": "http://localhost:8004/fileNotFound.html",
+  "accept-encoding": "gzip, deflate, br",
+  "accept-language": "en-US,en;q=0.9",
+  "cookie": "logInFailed=true; loginFailed=false; sessionid=1515744209847"
+}
+COOKIES=> {
+  "logInFailed": "true",
+  "loginFailed": "false",
+  "sessionid": "1515744209847"
+}
+BODY=> {}
+------------------------------
+Fri Jan 12 2018 1:55:48 PM
+GET /res/notFound.png
+HEADERS=> {
+  "host": "localhost:8004",
+  "connection": "keep-alive",
+  "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.84 Safari/537.36",
+  "accept": "image/webp,image/apng,image/*,*/*;q=0.8",
+  "referer": "http://localhost:8004/fileNotFound.html",
+  "accept-encoding": "gzip, deflate, br",
+  "accept-language": "en-US,en;q=0.9",
+  "cookie": "logInFailed=true; loginFailed=false; sessionid=1515744209847"
+}
+COOKIES=> {
+  "logInFailed": "true",
+  "loginFailed": "false",
+  "sessionid": "1515744209847"
+}
+BODY=> {}
+------------------------------
+Fri Jan 12 2018 1:56:09 PM
+GET /fileNotFound.html
+HEADERS=> {
+  "host": "localhost:8004",
+  "connection": "keep-alive",
+  "cache-control": "max-age=0",
+  "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.84 Safari/537.36",
+  "upgrade-insecure-requests": "1",
+  "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
+  "accept-encoding": "gzip, deflate, br",
+  "accept-language": "en-US,en;q=0.9",
+  "cookie": "logInFailed=true; loginFailed=false; sessionid=1515744209847"
+}
+COOKIES=> {
+  "logInFailed": "true",
+  "loginFailed": "false",
+  "sessionid": "1515744209847"
+}
+BODY=> {}
+------------------------------
+Fri Jan 12 2018 1:56:09 PM
+GET /css/fileNotFound.css
+HEADERS=> {
+  "host": "localhost:8004",
+  "connection": "keep-alive",
+  "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.84 Safari/537.36",
+  "accept": "text/css,*/*;q=0.1",
+  "referer": "http://localhost:8004/fileNotFound.html",
+  "accept-encoding": "gzip, deflate, br",
+  "accept-language": "en-US,en;q=0.9",
+  "cookie": "logInFailed=true; loginFailed=false; sessionid=1515744209847"
+}
+COOKIES=> {
+  "logInFailed": "true",
+  "loginFailed": "false",
+  "sessionid": "1515744209847"
+}
+BODY=> {}
+------------------------------
+Fri Jan 12 2018 1:56:09 PM
+GET /res/notFound.png
+HEADERS=> {
+  "host": "localhost:8004",
+  "connection": "keep-alive",
+  "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.84 Safari/537.36",
+  "accept": "image/webp,image/apng,image/*,*/*;q=0.8",
+  "referer": "http://localhost:8004/fileNotFound.html",
+  "accept-encoding": "gzip, deflate, br",
+  "accept-language": "en-US,en;q=0.9",
+  "cookie": "logInFailed=true; loginFailed=false; sessionid=1515744209847"
+}
+COOKIES=> {
+  "logInFailed": "true",
+  "loginFailed": "false",
+  "sessionid": "1515744209847"
+}
+BODY=> {}
+------------------------------
+Fri Jan 12 2018 1:56:18 PM
+GET /fileNotFound.html
+HEADERS=> {
+  "host": "localhost:8004",
+  "connection": "keep-alive",
+  "cache-control": "max-age=0",
+  "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.84 Safari/537.36",
+  "upgrade-insecure-requests": "1",
+  "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
+  "accept-encoding": "gzip, deflate, br",
+  "accept-language": "en-US,en;q=0.9",
+  "cookie": "logInFailed=true; loginFailed=false; sessionid=1515744209847"
+}
+COOKIES=> {
+  "logInFailed": "true",
+  "loginFailed": "false",
+  "sessionid": "1515744209847"
+}
+BODY=> {}
+------------------------------
+Fri Jan 12 2018 1:56:18 PM
+GET /css/fileNotFound.css
+HEADERS=> {
+  "host": "localhost:8004",
+  "connection": "keep-alive",
+  "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.84 Safari/537.36",
+  "accept": "text/css,*/*;q=0.1",
+  "referer": "http://localhost:8004/fileNotFound.html",
+  "accept-encoding": "gzip, deflate, br",
+  "accept-language": "en-US,en;q=0.9",
+  "cookie": "logInFailed=true; loginFailed=false; sessionid=1515744209847"
+}
+COOKIES=> {
+  "logInFailed": "true",
+  "loginFailed": "false",
+  "sessionid": "1515744209847"
+}
+BODY=> {}
+------------------------------
+Fri Jan 12 2018 1:56:18 PM
+GET /res/notFound.png
+HEADERS=> {
+  "host": "localhost:8004",
+  "connection": "keep-alive",
+  "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.84 Safari/537.36",
+  "accept": "image/webp,image/apng,image/*,*/*;q=0.8",
+  "referer": "http://localhost:8004/fileNotFound.html",
+  "accept-encoding": "gzip, deflate, br",
+  "accept-language": "en-US,en;q=0.9",
+  "cookie": "logInFailed=true; loginFailed=false; sessionid=1515744209847"
+}
+COOKIES=> {
+  "logInFailed": "true",
+  "loginFailed": "false",
+  "sessionid": "1515744209847"
+}
+BODY=> {}
+------------------------------
+Fri Jan 12 2018 1:56:30 PM
+GET /fileNotFound.html
+HEADERS=> {
+  "host": "localhost:8004",
+  "connection": "keep-alive",
+  "cache-control": "max-age=0",
+  "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.84 Safari/537.36",
+  "upgrade-insecure-requests": "1",
+  "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
+  "accept-encoding": "gzip, deflate, br",
+  "accept-language": "en-US,en;q=0.9",
+  "cookie": "logInFailed=true; loginFailed=false; sessionid=1515744209847"
+}
+COOKIES=> {
+  "logInFailed": "true",
+  "loginFailed": "false",
+  "sessionid": "1515744209847"
+}
+BODY=> {}
+------------------------------
+Fri Jan 12 2018 1:56:30 PM
+GET /css/fileNotFound.css
+HEADERS=> {
+  "host": "localhost:8004",
+  "connection": "keep-alive",
+  "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.84 Safari/537.36",
+  "accept": "text/css,*/*;q=0.1",
+  "referer": "http://localhost:8004/fileNotFound.html",
+  "accept-encoding": "gzip, deflate, br",
+  "accept-language": "en-US,en;q=0.9",
+  "cookie": "logInFailed=true; loginFailed=false; sessionid=1515744209847"
+}
+COOKIES=> {
+  "logInFailed": "true",
+  "loginFailed": "false",
+  "sessionid": "1515744209847"
+}
+BODY=> {}
+------------------------------
+Fri Jan 12 2018 1:56:30 PM
+GET /res/notFound.png
+HEADERS=> {
+  "host": "localhost:8004",
+  "connection": "keep-alive",
+  "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.84 Safari/537.36",
+  "accept": "image/webp,image/apng,image/*,*/*;q=0.8",
+  "referer": "http://localhost:8004/fileNotFound.html",
+  "accept-encoding": "gzip, deflate, br",
+  "accept-language": "en-US,en;q=0.9",
+  "cookie": "logInFailed=true; loginFailed=false; sessionid=1515744209847"
+}
+COOKIES=> {
+  "logInFailed": "true",
+  "loginFailed": "false",
+  "sessionid": "1515744209847"
+}
+BODY=> {}
+------------------------------
+Fri Jan 12 2018 1:56:38 PM
+GET /fileNotFound.html
+HEADERS=> {
+  "host": "localhost:8004",
+  "connection": "keep-alive",
+  "cache-control": "max-age=0",
+  "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.84 Safari/537.36",
+  "upgrade-insecure-requests": "1",
+  "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
+  "accept-encoding": "gzip, deflate, br",
+  "accept-language": "en-US,en;q=0.9",
+  "cookie": "logInFailed=true; loginFailed=false; sessionid=1515744209847"
+}
+COOKIES=> {
+  "logInFailed": "true",
+  "loginFailed": "false",
+  "sessionid": "1515744209847"
+}
+BODY=> {}
+------------------------------
+Fri Jan 12 2018 1:56:38 PM
+GET /css/fileNotFound.css
+HEADERS=> {
+  "host": "localhost:8004",
+  "connection": "keep-alive",
+  "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.84 Safari/537.36",
+  "accept": "text/css,*/*;q=0.1",
+  "referer": "http://localhost:8004/fileNotFound.html",
+  "accept-encoding": "gzip, deflate, br",
+  "accept-language": "en-US,en;q=0.9",
+  "cookie": "logInFailed=true; loginFailed=false; sessionid=1515744209847"
+}
+COOKIES=> {
+  "logInFailed": "true",
+  "loginFailed": "false",
+  "sessionid": "1515744209847"
+}
+BODY=> {}
+------------------------------
+Fri Jan 12 2018 1:56:38 PM
+GET /res/notFound.png
+HEADERS=> {
+  "host": "localhost:8004",
+  "connection": "keep-alive",
+  "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.84 Safari/537.36",
+  "accept": "image/webp,image/apng,image/*,*/*;q=0.8",
+  "referer": "http://localhost:8004/fileNotFound.html",
+  "accept-encoding": "gzip, deflate, br",
+  "accept-language": "en-US,en;q=0.9",
+  "cookie": "logInFailed=true; loginFailed=false; sessionid=1515744209847"
+}
+COOKIES=> {
+  "logInFailed": "true",
+  "loginFailed": "false",
+  "sessionid": "1515744209847"
+}
+BODY=> {}
