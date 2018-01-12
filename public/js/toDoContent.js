@@ -1,1 +1,1 @@
-var toDoContent={"description":"list","itemList":["take notes"]}
+var toDoContent={"description":"todo"}

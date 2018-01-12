@@ -96,6 +96,18 @@ app.use(loadUser);
 app.addPostprocess(gotoToDo);
 app.addPostprocess(writeToPage);
 
+app.get('/deleteToDo',(req,res)=>{
+  let title=req.cookies.title;
+  let userName=req.user.userName;
+  let filePath=`./data/${userName}ToDos.json`;
+  let sendingFilePath=`./public/js/todos.js`;
+  let currentContent=JSON.parse(fs.readFileSync(filePath,"utf-8"));
+  delete currentContent[title];
+  fs.writeFileSync(filePath,JSON.stringify(currentContent));
+  fs.writeFileSync(sendingFilePath,`var todos=${JSON.stringify(currentContent)}`);
+  res.redirect('/viewAll.html')
+});
+
 app.get('/showSingleToDo',(req,res)=>{
   let filePath=`./data/${req.user.userName}ToDos.json`;
   let allToDos=JSON.parse(fs.readFileSync(filePath,"utf-8"));
