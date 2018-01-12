@@ -46,6 +46,10 @@ const setContentType=function (res,resourcePath) {
 };
 
 const writeToPage=function (req,res) {
+  if (!req.user) {
+    res.redirect('/login.html')
+    return ;
+  }
   let resourcePath=`./public${req.url}`;
   try {
     let filecontent=fs.readFileSync(resourcePath);
@@ -97,6 +101,7 @@ app.post('/login',(req,res)=>{
   let sessionid = new Date().getTime();
   res.setHeader('Set-Cookie',`sessionid=${sessionid}`);
   user.sessionid = sessionid;
+  fs.writeFileSync('./public/js/userName.js',`var user="Hello ${user.name}"`)
   res.redirect('/home.html');
 });
 

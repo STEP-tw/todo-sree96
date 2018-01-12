@@ -1,0 +1,19 @@
+.container{
+  height: 900px;
+  width: auto;
+}
+.heading{
+  text-align: center;
+  height: 20%;
+  width: auto;
+}
+
+.names{
+  width: 25%;
+  height: 100%;
+  float: right;
+  text-align: left;
+}
+h1{
+  text-align: center;
+}

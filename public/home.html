@@ -3,8 +3,23 @@
   <head>
     <meta charset="utf-8">
     <title>Home Page</title>
+    <link rel="stylesheet" href="/css/home.css">
+    <script src="./js/userName.js" charset="utf-8"></script>
+    <script src="./js/addNameAndLogout.js" charset="utf-8"></script>
   </head>
   <body>
-    <h1>HOME</h1>
+    <div class="container">
+      <div class="heading">
+        <h1>HOME PAGE</h1>
+        <div class="names">
+          <b id="userName"></b><br />
+          <a href="/logout">Logout</a>
+        </div>
+      </div>
+      <div class="links">
+        <h3><a href="/addNewTodo.html">ADD NEW TO-DO</a></h3>
+        <h3><a href="/viewAll.html">VIEW ALL</a></h3>
+      </div>
+    </div>
   </body>
 </html>
