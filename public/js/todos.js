@@ -1,1 +1,1 @@
-var todos={"sreenu":{"description":"list","itemList":["take notes",null,"item"]}}
+var todos={"todo":{"description":"sample","itemList":["take+notes","take+breaks","commit+regularly"]}}
