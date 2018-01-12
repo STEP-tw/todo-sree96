@@ -6,7 +6,7 @@ const showToDoContent=function () {
   if (itemList.length!=0) {
     let innerHtml="<table><th></th><th></th>";
     itemList.forEach(function (item) {
-      innerHtml+=`<tr><td><input type="checkbox" name="item"></td><td>${item}</td></tr>`;
+      innerHtml+=`<tr><td><input type="checkbox" name="item" ></td><td>${item}</td></tr>`;
     })
     innerHtml+="</table>";
     content.innerHTML=innerHtml;
