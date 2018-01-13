@@ -31,12 +31,18 @@ describe('app',()=>{
       })
     })
   })
-  describe.skip('GET /js/todos.js',()=>{
-    it('serves the javascript source',done=>{
-      request(app,{method:'GET',url:'/js/todos.js'},res=>{
-        th.status_is_ok(res);
-        th.content_type_is(res,'text/javascript');
-        th.body_contains(res,'todos');
+  describe('GET /',()=>{
+    it('serves home page if logged in',done=>{
+      request(app,{method:'GET',url:'/',user:{'userName':'sree'}},res=>{
+        th.should_be_redirected_to(res,'/home.html');
+        done();
+      })
+    })
+  })
+  describe('GET /',()=>{
+    it('serves home page if logged in',done=>{
+      request(app,{method:'GET',url:'/home.html',user:{'userName':'sree'}},res=>{
+        th.body_contains(res,'Home Page');
         done();
       })
     })
@@ -62,18 +68,18 @@ describe('app',()=>{
     })
   })
 
-  describe.skip('POST /login',()=>{
+  describe('POST /login',()=>{
     it('redirects to guestBook for valid user',done=>{
-      request(app,{method:'POST',url:'/login',body:'username=arvind'},res=>{
-        th.should_be_redirected_to(res,'/guestBook');
+      request(app,{method:'POST',url:'/login',body:'userName=sree'},res=>{
+        th.should_be_redirected_to(res,'/home.html');
         th.should_not_have_cookie(res,'message');
         done();
       })
     })
     it('redirects to login.html with message for invalid user',done=>{
-      request(app,{method:'POST',url:'/login',body:'username=badUser'},res=>{
+      request(app,{method:'POST',url:'/login',body:'userName=badUser'},res=>{
         th.should_be_redirected_to(res,'/login.html');
-        th.should_have_expiring_cookie(res,'message','login failed');
+        th.should_have_expiring_cookie(res,'message','Login Failed');
         done();
       })
     })

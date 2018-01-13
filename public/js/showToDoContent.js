@@ -12,14 +12,14 @@ const showToDoContent=function () {
     })
     innerHtml+="</table>";
     content.innerHTML=innerHtml;
-    // let checkboxes=document.querySelectorAll("input");
-    // checkboxes.forEach(function (checkbox) {
-    //   let paresedItem=Object.keys(item)[0];
-    //   let status=item[paresedItem];
-    //   console.log(status);
-    //   let id=checkbox.id;
-    //   document.getElementById(id).checked=status;
-    // })
+    let checkboxes=document.querySelectorAll("input");
+    checkboxes.forEach(function (checkbox,index) {
+      let paresedItem=Object.keys(itemList[index]);
+      let status=itemList[index][paresedItem];
+      console.log(status);
+      let id=checkbox.id;
+      document.getElementById(id).checked=status;
+    })
   }
 }
 

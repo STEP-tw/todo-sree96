@@ -1,1 +1,1 @@
-var todos={"new":{"description":"","itemList":[{"newitem":true},{"test":false}]},"test":{"description":"","itemList":[{"added":false}]}}
+var todos={"new":{"description":"","itemList":[{"newitem":true},{"test":false}]}}

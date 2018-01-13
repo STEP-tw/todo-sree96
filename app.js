@@ -41,7 +41,8 @@ const getContentType=function (resourcePath) {
 
 const setContentType=function (res,resourcePath) {
   let extension=getContentType(resourcePath);
-  res.writeHead(200,{"Content-Type": contentTypes[extension]});
+  res.statusCode=200;
+  res.setHeader("Content-Type",contentTypes[extension]);
 };
 
 const writeToPage=function (req,res) {
@@ -55,6 +56,7 @@ const writeToPage=function (req,res) {
     setContentType(res,resourcePath);
     res.write(filecontent);
     res.end();
+    return ;
   } catch (e) {
     res.statusCode = 404;
     res.redirect('/fileNotFound.html');
@@ -92,18 +94,18 @@ const markOnDataBase=(req,res,status)=>{
   let title=req.cookies.title;
   let item=req.url.split("&")[1].split('%')[0];
   let filePath=`./data/${req.user.userName}ToDos.json`;
-  let sendingFilePath=`./public/js/todos.js`;
+  let sendingFilePath=`./public/js/toDoContent.js`;
   let allToDos=JSON.parse(fs.readFileSync(filePath,"utf-8"));
   let itemList=allToDos[title].itemList;
   let foundItem=itemList.find(function (current) {
     return Object.keys(current)[0]==item;
   });
-  console.log(item);
   let index=itemList.indexOf(foundItem);
   foundItem[item]=status;
   allToDos[title].itemList[index]=foundItem;
   fs.writeFileSync(filePath,JSON.stringify(allToDos));
-  fs.writeFileSync(sendingFilePath,`var todos=${JSON.stringify(allToDos)}`);
+  let wantedToDo=allToDos[req.cookies.title];
+  fs.writeFileSync('./public/js/toDoContent.js',`var toDoContent=${JSON.stringify(wantedToDo)};\nvar todoTitle="${req.cookies.title}"`);
   res.end();
 }
 
@@ -127,6 +129,10 @@ const markAsNotDone=(req,res)=> {
   return ;
 }
 
+const writeToDataFile=(filePath,content)=>{
+  fs.writeFileSync(filePath,content);
+}
+
 app.use(logRequest)
 app.use(loadUser);
 app.use(markAsDone);
@@ -143,8 +149,8 @@ app.get('/deleteToDo',(req,res)=>{
   let sendingFilePath=`./public/js/todos.js`;
   let currentContent=JSON.parse(fs.readFileSync(filePath,"utf-8"));
   delete currentContent[title];
-  fs.writeFileSync(filePath,JSON.stringify(currentContent));
-  fs.writeFileSync(sendingFilePath,`var todos=${JSON.stringify(currentContent)}`);
+  writeToDataFile(filePath,JSON.stringify(currentContent));
+  writeToDataFile(sendingFilePath,`var todos=${JSON.stringify(currentContent)}`);
   res.redirect('/viewAll.html')
 });
 
@@ -152,7 +158,7 @@ app.get('/showSingleToDo',(req,res)=>{
   let filePath=`./data/${req.user.userName}ToDos.json`;
   let allToDos=JSON.parse(fs.readFileSync(filePath,"utf-8"));
   let wantedToDo=allToDos[req.cookies.title];
-  fs.writeFileSync('./public/js/toDoContent.js',`var toDoContent=${JSON.stringify(wantedToDo)};\nvar todoTitle="${req.cookies.title}"`);
+  writeToDataFile('./public/js/toDoContent.js',`var toDoContent=${JSON.stringify(wantedToDo)};\nvar todoTitle="${req.cookies.title}"`);
   res.redirect('/showSingleToDo.html');
 });
 
@@ -184,8 +190,8 @@ app.post('/login',(req,res)=>{
   let filePath=`./data/${user.userName}ToDos.json`;
   let sendingFilePath=`./public/js/todos.js`;
   let currentContent=JSON.parse(fs.readFileSync(filePath,"utf-8"));
-  fs.writeFileSync(sendingFilePath,`var todos=${toS(currentContent)}`);
-  fs.writeFileSync('./public/js/userName.js',`var user="Hello ${user.name}"`);
+  writeToDataFile(sendingFilePath,`var todos=${toS(currentContent)}`);
+  writeToDataFile('./public/js/userName.js',`var user="Hello ${user.name}"`);
   res.redirect('/home.html');
 });
 
@@ -202,8 +208,8 @@ app.post('/addNewTodo',(req,res)=>{
   let newToDoData={'description':`${req.body.description}`,'itemList':[]};
   let currentContent=JSON.parse(fs.readFileSync(filePath,"utf-8"));
   currentContent[`${req.body.title}`]=newToDoData;
-  fs.writeFileSync(filePath,JSON.stringify(currentContent));
-  fs.writeFileSync(sendingFilePath,`var todos=${JSON.stringify(currentContent)}`);
+  writeToDataFile(filePath,JSON.stringify(currentContent));
+  writeToDataFile(sendingFilePath,`var todos=${JSON.stringify(currentContent)}`);
   res.redirect('/home.html')
 })
 
@@ -218,10 +224,9 @@ app.post('/addNewItem',(req,res)=>{
   console.log(newToDoItem);
   let currentContent=JSON.parse(fs.readFileSync(filePath,"utf-8"));
   currentContent[title].itemList.push(newToDoItem);
-  fs.writeFileSync(filePath,JSON.stringify(currentContent));
-  fs.writeFileSync(sendingFilePath,`var todos=${JSON.stringify(currentContent)}`);
+  writeToDataFile(filePath,JSON.stringify(currentContent));
+  writeToDataFile(sendingFilePath,`var todos=${JSON.stringify(currentContent)}`);
   res.redirect('/showSingleToDo');
 })
-
 
 module.exports=app;

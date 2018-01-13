@@ -1,8 +1,5 @@
 const mark=function (event) {
   function reqListener () {
-    // let visitorCount = this.responseText;
-    // console.log(visitorCount);
-    // document.querySelector('#count').innerText = visitorCount;
     console.log(this.responseText);
   }
   let id=event.target.id;

@@ -5,6 +5,7 @@ let request = function(app,options,onComplete){
   let req = new EventEmitter();
   req.method = options.method;
   req.url = options.url;
+  req.user=options.user;
   req.headers = options.headers||{};
   let res={
     end:()=>{
@@ -16,8 +17,8 @@ let request = function(app,options,onComplete){
       };
       onComplete(result);
     },
-    setHeader:(key,value)=> res_headers[key] = value,
-    write:(text)=>res_contents+=text
+    setHeader:(key,value)=> {res_headers[key] = value},
+    write:(text)=>{res_contents+=text;}
   };
   app(req,res);
   options.body && req.emit('data',options.body);
