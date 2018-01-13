@@ -90,8 +90,49 @@ const gotoToDo=(req,res)=>{
   return;
 }
 
+const markOnDataBase=(req,res,status)=>{
+  let title=req.cookies.title;
+  let item=req.url.split("&")[1];
+  let filePath=`./data/${req.user.userName}ToDos.json`;
+  let sendingFilePath=`./public/js/todos.js`;
+  let allToDos=JSON.parse(fs.readFileSync(filePath,"utf-8"));
+  let itemList=allToDos[title].itemList;
+  let foundItem=itemList.find(function (current) {
+    return Object.keys(current)[0]==item;
+  });
+  let index=itemList.indexOf(foundItem);
+  foundItem[item]=status;
+  allToDos[title].itemList[index]=foundItem;
+  fs.writeFileSync(filePath,JSON.stringify(allToDos));
+  fs.writeFileSync(sendingFilePath,`var todos=${JSON.stringify(allToDos)}`);
+  res.end();
+}
+
+const markAsDone=(req,res)=> {
+  if (req.url.startsWith("/mark")) {
+    if (!req.user) {
+      res.redirect('/fileNotFound.html')
+    }
+    markOnDataBase(req,res,true);
+  }
+  return ;
+}
+
+const markAsNotDone=(req,res)=> {
+  if (req.url.startsWith("/unmark")) {
+    if (!req.user) {
+      res.redirect('/fileNotFound.html')
+    }
+    markOnDataBase(req,res,false)
+  }
+  return ;
+}
+
 app.use(logRequest)
 app.use(loadUser);
+app.use(markAsDone);
+app.use(markAsNotDone);
+
 
 app.addPostprocess(gotoToDo);
 app.addPostprocess(writeToPage);
@@ -112,7 +153,7 @@ app.get('/showSingleToDo',(req,res)=>{
   let filePath=`./data/${req.user.userName}ToDos.json`;
   let allToDos=JSON.parse(fs.readFileSync(filePath,"utf-8"));
   let wantedToDo=allToDos[req.cookies.title];
-  fs.writeFileSync('./public/js/toDoContent.js',`var toDoContent=${JSON.stringify(wantedToDo)}`);
+  fs.writeFileSync('./public/js/toDoContent.js',`var toDoContent=${JSON.stringify(wantedToDo)};\nvar todoTitle="${req.cookies.title}"`);
   res.redirect('/showSingleToDo.html');
 });
 
@@ -144,7 +185,7 @@ app.post('/login',(req,res)=>{
   let filePath=`./data/${user.userName}ToDos.json`;
   let sendingFilePath=`./public/js/todos.js`;
   let currentContent=JSON.parse(fs.readFileSync(filePath,"utf-8"));
-  fs.writeFileSync(sendingFilePath,`var todos=${JSON.stringify(currentContent)}`);
+  fs.writeFileSync(sendingFilePath,`var todos=${toS(currentContent)}`);
   fs.writeFileSync('./public/js/userName.js',`var user="Hello ${user.name}"`);
   res.redirect('/home.html');
 });
@@ -168,18 +209,20 @@ app.post('/addNewTodo',(req,res)=>{
 })
 
 app.post('/addNewItem',(req,res)=>{
+  let newToDoItem={};
   let userName=req.user.userName;
   let filePath=`./data/${userName}ToDos.json`;
   let sendingFilePath=`./public/js/todos.js`;
   let title=req.cookies.title;
-  let newToDoItem=req.body.item;
+  let item=req.body.item;
+  newToDoItem[`${item}`]=false;
+  console.log(newToDoItem);
   let currentContent=JSON.parse(fs.readFileSync(filePath,"utf-8"));
   currentContent[title].itemList.push(newToDoItem);
   fs.writeFileSync(filePath,JSON.stringify(currentContent));
   fs.writeFileSync(sendingFilePath,`var todos=${JSON.stringify(currentContent)}`);
   res.redirect('/showSingleToDo');
 })
-
 
 let server=http.createServer(app);
 server.listen(PORT);

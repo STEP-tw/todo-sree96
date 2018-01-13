@@ -1,1 +1,1 @@
-var todos={"todo":{"description":"sample","itemList":["take+notes","take+breaks","commit+regularly"]}}
+var todos={"test":{"description":"sre","itemList":["new"]},"good":{"description":"","itemList":[{"take+notes":true},{"test":false}]}}
