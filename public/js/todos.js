@@ -1,1 +1,13 @@
-var todos={"new":{"description":"","itemList":[{"newitem":true},{"test":false}]}}
+var todos={
+  "new": {
+    "description": "",
+    "itemList": [
+      {
+        "newitem": true
+      },
+      {
+        "test": false
+      }
+    ]
+  }
+}

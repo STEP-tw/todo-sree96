@@ -2,21 +2,21 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>TO DO</title>
-    <script src="./js/markAsDoneOrUndone.js" charset="utf-8"></script>
+    <title>EDIT</title>
     <script src="./js/userName.js" charset="utf-8"></script>
     <script src="./js/addNameAndLogout.js" charset="utf-8"></script>
     <script src="./js/toDoContent.js" charset="utf-8"></script>
-    <script src="./js/showToDoContent.js" charset="utf-8"></script>
+    <script src="./js/preFillToDoContent.js" charset="utf-8"></script>
   </head>
   <body>
     <b id="userName"></b><br />
     <a href="/logout">Logout</a>
     <a href="/home.html">Home</a>
-    <a href="/deleteToDo">Delete</a>
-    <a href="/addToToDoList.html">Add New Item</a>
-    <a href="/editAll.html">Edit</a>
-    <h3 id="title" style="text-align:center"></h3>
-    <p id="content"></p>
+    <form action="/edit" method="post">
+      Titile :<input type="text" name="title"><br>
+      Description:<input type="text" name="description"><br>
+      Items :<textarea name="items" rows="8" cols="80"></textarea><br>
+      <button type="submit">Save Changes</button>
+    </form>
   </body>
 </html>
