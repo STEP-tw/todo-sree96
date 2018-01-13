@@ -8,10 +8,18 @@ const showToDoContent=function () {
     let innerHtml=`<table onclick="mark(event)"><th></th><th></th>`;
     itemList.forEach(function (item) {
       let paresedItem=Object.keys(item)[0];
-      innerHtml+=`<tr><td><input type="checkbox" id="${paresedItem}" ></td><td>${paresedItem}</td></tr>`;
+      innerHtml+=`<tr><td><input type="checkbox" id="${paresedItem}"></td><td>${paresedItem}</td></tr>`;
     })
     innerHtml+="</table>";
     content.innerHTML=innerHtml;
+    // let checkboxes=document.querySelectorAll("input");
+    // checkboxes.forEach(function (checkbox) {
+    //   let paresedItem=Object.keys(item)[0];
+    //   let status=item[paresedItem];
+    //   console.log(status);
+    //   let id=checkbox.id;
+    //   document.getElementById(id).checked=status;
+    // })
   }
 }
 

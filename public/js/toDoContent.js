@@ -1,2 +1,2 @@
-var toDoContent={"description":"","itemList":[{"take+notes":false},{"test":false}]};
-var todoTitle="good"
+var toDoContent={"description":"","itemList":[{"added":false}]};
+var todoTitle="test"
