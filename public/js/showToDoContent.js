@@ -16,7 +16,6 @@ const showToDoContent=function () {
     checkboxes.forEach(function (checkbox,index) {
       let paresedItem=Object.keys(itemList[index]);
       let status=itemList[index][paresedItem];
-      console.log(status);
       let id=checkbox.id;
       document.getElementById(id).checked=status;
     })
