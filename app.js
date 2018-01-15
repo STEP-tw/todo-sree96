@@ -45,6 +45,14 @@ const setContentType=function (res,resourcePath) {
   res.setHeader("Content-Type",contentTypes[extension]);
 };
 
+const serve404=(req,res)=>{
+  res.statusCode = 404;
+  res.setHeader('Content-Type','text/html');
+  res.write(fs.readFileSync('./public/fileNotFound.html'));
+  res.end();
+  return ;
+}
+
 const writeToPage=function (req,res) {
   if (!req.user) {
     res.redirect('/login.html')
@@ -58,9 +66,7 @@ const writeToPage=function (req,res) {
     res.end();
     return ;
   } catch (e) {
-    res.statusCode = 404;
-    res.redirect('/fileNotFound.html');
-    res.end();
+    serve404(req,res);
     return;
   }
 };
@@ -81,7 +87,8 @@ const titleSpliter=function (req) {
 const gotoToDo=(req,res)=>{
   if (req.url.startsWith("/getClickedToDo")) {
     if (!req.user) {
-      res.redirect('/fileNotFound.html')
+      res.redirect('/fileNotFound.html');
+      return ;
     }
     let title=titleSpliter(req);
     res.setHeader('Set-Cookie',`title=${title}`)
@@ -158,13 +165,21 @@ app.get('/showSingleToDo',(req,res)=>{
   let filePath=`./data/${req.user.userName}ToDos.json`;
   let allToDos=JSON.parse(fs.readFileSync(filePath,"utf-8"));
   let wantedToDo=allToDos[req.cookies.title];
+  if (!wantedToDo) {
+    res.redirect('/fileNotFound.html');
+    return ;
+  }
   writeToDataFile('./public/js/toDoContent.js',`var toDoContent=${JSON.stringify(wantedToDo)};\nvar todoTitle="${req.cookies.title}"`);
   res.redirect('/showSingleToDo.html');
 });
 
 app.get('/',(req,res)=>{
   if (req.user) {
+    // req.url='/home.html';
+    // console.log(req);
+    // writeToPage(req,res);
     res.redirect('/home.html');
+    return;
   }
   res.redirect('/login.html');
 });
@@ -178,7 +193,7 @@ app.get('/login.html',(req,res)=>{
 });
 
 app.post('/login',(req,res)=>{
-  let user = _registeredUsers.find(u=>u.userName==req.body.userName);
+  let user = _registeredUsers.find(u=>u.userName==req.body.userName&&u.password==req.body.password);
   if(!user) {
     res.setHeader('Set-Cookie',`message=Login Failed; Max-Age=5`);
     res.redirect('/login.html');

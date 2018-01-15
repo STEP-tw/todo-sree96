@@ -69,8 +69,8 @@ describe('app',()=>{
   })
 
   describe('POST /login',()=>{
-    it('redirects to guestBook for valid user',done=>{
-      request(app,{method:'POST',url:'/login',body:'userName=sree'},res=>{
+    it('redirects to home page for valid user',done=>{
+      request(app,{method:'POST',url:'/login',body:'userName=sree&password=password'},res=>{
         th.should_be_redirected_to(res,'/home.html');
         th.should_not_have_cookie(res,'message');
         done();
@@ -80,6 +80,15 @@ describe('app',()=>{
       request(app,{method:'POST',url:'/login',body:'userName=badUser'},res=>{
         th.should_be_redirected_to(res,'/login.html');
         th.should_have_expiring_cookie(res,'message','Login Failed');
+        done();
+      })
+    })
+  })
+  describe('GET /bad',()=>{
+    it('responds with file not found page when logged in for bad url',done=>{
+      request(app,{method:'GET',url:'/bad',user:{userName:'sree',name:'sreenadh',password:"password"}},(res)=>{
+        assert.equal(res.statusCode,404);
+        th.body_contains(res,"Requested File Not Found");
         done();
       })
     })

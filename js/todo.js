@@ -8,15 +8,16 @@ ToDo.prototype.addDescription = function (description) {
 };
 
 ToDo.prototype.addNewListItem = function (listItem) {
-  let li={`${listItem}`:false};
+  let li={};
+  li[`${listItem}`]=false;
   this.listItems.push(li);
 };
 
 ToDo.prototype.getSpecificListItem = function (listItem) {
   let li=this.listItems.find(function (current) {
-    Object.keys(current)[0]==listItem;
+    return Object.keys(current)[0]==listItem;
   });
-  return li||'';
+  return li||"";
 };
 
 ToDo.prototype.getTitle = function () {
@@ -31,5 +32,5 @@ ToDo.prototype.idDone = function (listItem) {
   let li=this.listItems.find(function (current) {
     Object.keys(current)[0]==listItem;
   });
-  
+
 };
