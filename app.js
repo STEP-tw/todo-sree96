@@ -53,7 +53,7 @@ const serve404=(req,res)=>{
   return ;
 }
 
-const writeToPage=function (req,res) {
+const serveStaticPage=function (req,res) {
   if (!req.user) {
     res.redirect('/login.html')
     return ;
@@ -146,7 +146,7 @@ app.use(markAsDone);
 app.use(markAsNotDone);
 
 app.addPostprocess(gotoToDo);
-app.addPostprocess(writeToPage);
+app.addPostprocess(serveStaticPage);
 
 app.get('/deleteToDo',(req,res)=>{
   let title=req.cookies.title;
@@ -174,17 +174,21 @@ app.get('/showSingleToDo',(req,res)=>{
 
 app.get('/',(req,res)=>{
   if (req.user) {
-    // req.url='/home.html';
-    // console.log(req);
-    // writeToPage(req,res);
     res.redirect('/home.html');
     return;
+    // req.url='/home.html';
+    // console.log(req);
+    // serveStaticPage(req,res);
   }
   res.redirect('/login.html');
 });
 
 app.get('/login.html',(req,res)=>{
-  res.setHeader('Content-type','text/html');
+  if (req.user) {
+    res.redirect('/home.html');
+    return;
+  }
+  res.setHeader('Content-Type','text/html');
   res.write(`<h1>Login</h1>`);
   res.write(`<p>${req.cookies.message||""}</p>`);
   res.write(fs.readFileSync("./public/login.html"));
@@ -211,7 +215,9 @@ app.post('/login',(req,res)=>{
 
 app.get('/logout',(req,res)=>{
   res.setHeader('Set-Cookie',`sessionid=0`);
-  delete req.user.sessionid;
+  if (req.user) {
+    delete req.user.sessionid;
+  }
   res.redirect('/login.html');
 });
 

@@ -6,21 +6,10 @@ var todos={
         "newitem": true
       },
       {
-        "test": false
-      }
-    ]
-  },
-  "shubham": {
-    "description": "brilliant",
-    "itemList": [
-      {
-        "item+1": true
+        "test": true
       },
       {
-        "item2": false
-      },
-      {
-        "item+3": false
+        "dadadadada": true
       }
     ]
   }
