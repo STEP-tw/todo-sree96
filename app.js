@@ -145,7 +145,6 @@ app.use(loadUser);
 app.use(markAsDone);
 app.use(markAsNotDone);
 
-
 app.addPostprocess(gotoToDo);
 app.addPostprocess(writeToPage);
 
@@ -236,12 +235,22 @@ app.post('/addNewItem',(req,res)=>{
   let title=req.cookies.title;
   let item=req.body.item;
   newToDoItem[`${item}`]=false;
-  console.log(newToDoItem);
   let currentContent=JSON.parse(fs.readFileSync(filePath,"utf-8"));
   currentContent[title].itemList.push(newToDoItem);
   writeToDataFile(filePath,JSON.stringify(currentContent));
   writeToDataFile(sendingFilePath,`var todos=${JSON.stringify(currentContent)}`);
   res.redirect('/showSingleToDo');
-})
+});
+
+app.post('/edit',(req,res)=>{
+  let title=req.body.title;;
+  let description=req.body.description;
+  let items=querystring.unescape(req.body.items).split('\r\n');
+  items=items.filter(function (item) {
+    return item!="";
+  });
+  console.log(items);
+  res.end();
+});
 
 module.exports=app;

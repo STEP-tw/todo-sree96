@@ -12,6 +12,16 @@ var todos={
   },
   "shubham": {
     "description": "brilliant",
-    "itemList": []
+    "itemList": [
+      {
+        "item+1": true
+      },
+      {
+        "item2": false
+      },
+      {
+        "item+3": false
+      }
+    ]
   }
 }

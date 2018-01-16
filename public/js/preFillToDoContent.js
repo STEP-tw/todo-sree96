@@ -1,5 +1,11 @@
 const fillItemList=function () {
-  return ;
+  let itemListArea=document.getElementById('items');
+  let itemList=toDoContent.itemList;
+  let content='';
+  itemList.forEach(function(item) {
+    content+=`${Object.keys(item)[0]}\n`
+  });
+  itemListArea.value=content;
 }
 
 const preFillToDoContent=function () {

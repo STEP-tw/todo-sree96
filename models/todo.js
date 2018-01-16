@@ -28,9 +28,11 @@ ToDo.prototype.getAllListItems = function () {
   return this.listItems;
 };
 
-ToDo.prototype.idDone = function (listItem) {
-  let li=this.listItems.find(function (current) {
-    Object.keys(current)[0]==listItem;
+ToDo.prototype.isDone = function (listItem) {
+  let oIndex;
+  let li=this.listItems.find(function (current,index) {
+    oIndex=index;
+    return Object.keys(current)[0]==listItem;
   });
-
+  return this.listItems[oIndex][listItem];
 };
