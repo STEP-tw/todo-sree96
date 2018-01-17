@@ -85,13 +85,38 @@ request(app,{method:'GET',url:'/bad',user:{userName:'sree',name:'sreenadh',passw
       })
     });
   });
-  describe.skip('GET /home.html', function(){
-    it('redirects to login page after logout',done=>{
-      request(app,{method:'GET',url:'/home.html',body:'userName=sree&password=password'},res=>{
-        th.should_be_redirected_to(res,'/login.html');
-        th.should_have_cookie(res,'sessionid',0);
+  describe('GET /home.html', function(){
+    it('serves to home page if loggedin',done=>{
+      request(app,{method:'GET',url:'/home.html',user:{userName:'sree',name:'sreenadh',password:"password"}},res=>{
+        th.status_is_ok(res);
+        th.content_type_is(res,'text/html');
+        th.body_contains(res,"HOME PAGE");
         done();
       })
+    });
+    it('redirects to login page if not loggedin',done=>{
+      request(app,{method:'GET',url:'/home.html'},res=>{
+        th.should_be_redirected_to(res,'/login.html');
+        done();
+      })
+    });
+  });
+  describe('GET /addNewTodo.html', function(){
+      it('serves an addNewTodo page if loggedin', function(done){
+      request(app,{method:'GET',url:'/addNewTodo.html',user:{userName:'sree',name:'sreenadh',password:"password"}},res=>{
+        th.status_is_ok(res);
+        th.content_type_is(res,'text/html');
+        th.body_contains(res,"Description: ");
+        th.body_contains(res,"Logout");
+        th.body_contains(res,"Home");
+        done();
+      });
+    });
+      it('serves an addNewTodo page if loggedin', function(done){
+      request(app,{method:'GET',url:'/addNewTodo.html'},res=>{
+        th.should_be_redirected_to(res,'/login.html');
+        done();
+      });
     });
   });
 

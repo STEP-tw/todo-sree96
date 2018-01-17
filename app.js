@@ -62,6 +62,7 @@ const serveStaticPage=function (req,res) {
   try {
     let filecontent=fs.readFileSync(resourcePath);
     setContentType(res,resourcePath);
+    res.statusCode=200;
     res.write(filecontent);
     res.end();
     return ;
@@ -148,7 +149,7 @@ app.use(markAsNotDone);
 app.addPostprocess(gotoToDo);
 app.addPostprocess(serveStaticPage);
 
-app.get('/deleteToDo',(req,res)=>{
+const deleteToDo=(req,res)=>{
   let title=req.cookies.title;
   let userName=req.user.userName;
   let filePath=`./data/${userName}ToDos.json`;
@@ -158,9 +159,9 @@ app.get('/deleteToDo',(req,res)=>{
   writeToDataFile(filePath,JSON.stringify(currentContent));
   writeToDataFile(sendingFilePath,`var todos=${JSON.stringify(currentContent)}`);
   res.redirect('/viewAll.html')
-});
+}
 
-app.get('/showSingleToDo',(req,res)=>{
+const showSingleToDo=(req,res)=>{
   let filePath=`./data/${req.user.userName}ToDos.json`;
   let allToDos=JSON.parse(fs.readFileSync(filePath,"utf-8"));
   let wantedToDo=allToDos[req.cookies.title];
@@ -170,20 +171,9 @@ app.get('/showSingleToDo',(req,res)=>{
   }
   writeToDataFile('./public/js/toDoContent.js',`var toDoContent=${JSON.stringify(wantedToDo)};\nvar todoTitle="${req.cookies.title}"`);
   res.redirect('/showSingleToDo.html');
-});
+};
 
-app.get('/',(req,res)=>{
-  if (req.user) {
-    res.redirect('/home.html');
-    return;
-    // req.url='/home.html';
-    // console.log(req);
-    // serveStaticPage(req,res);
-  }
-  res.redirect('/login.html');
-});
-
-app.get('/login.html',(req,res)=>{
+const serveLoginPage=(req,res)=>{
   if (req.user) {
     res.redirect('/home.html');
     return;
@@ -193,9 +183,9 @@ app.get('/login.html',(req,res)=>{
   res.write(`<p>${req.cookies.message||""}</p>`);
   res.write(fs.readFileSync("./public/login.html"));
   res.end();
-});
+};
 
-app.post('/login',(req,res)=>{
+const verifyLogin=(req,res)=>{
   let user = _registeredUsers.find(u=>u.userName==req.body.userName&&u.password==req.body.password);
   if(!user) {
     res.setHeader('Set-Cookie',`message=Login Failed; Max-Age=5`);
@@ -211,17 +201,17 @@ app.post('/login',(req,res)=>{
   writeToDataFile(sendingFilePath,`var todos=${toS(currentContent)}`);
   writeToDataFile('./public/js/userName.js',`var user="Hello ${user.name}"`);
   res.redirect('/home.html');
-});
+};
 
-app.get('/logout',(req,res)=>{
+const logoutUser=(req,res)=>{
   res.setHeader('Set-Cookie',`sessionid=0`);
   if (req.user) {
     delete req.user.sessionid;
   }
   res.redirect('/login.html');
-});
+};
 
-app.post('/addNewTodo',(req,res)=>{
+const addNewTodo=(req,res)=>{
   let userName=req.user.userName;
   let filePath=`./data/${userName}ToDos.json`;
   let sendingFilePath=`./public/js/todos.js`;
@@ -231,9 +221,9 @@ app.post('/addNewTodo',(req,res)=>{
   writeToDataFile(filePath,JSON.stringify(currentContent));
   writeToDataFile(sendingFilePath,`var todos=${JSON.stringify(currentContent)}`);
   res.redirect('/home.html')
-})
+};
 
-app.post('/addNewItem',(req,res)=>{
+const addNewItem=(req,res)=>{
   let newToDoItem={};
   let userName=req.user.userName;
   let filePath=`./data/${userName}ToDos.json`;
@@ -246,9 +236,9 @@ app.post('/addNewItem',(req,res)=>{
   writeToDataFile(filePath,JSON.stringify(currentContent));
   writeToDataFile(sendingFilePath,`var todos=${JSON.stringify(currentContent)}`);
   res.redirect('/showSingleToDo');
-});
+};
 
-app.post('/edit',(req,res)=>{
+const editTodo=(req,res)=>{
   let title=req.body.title;;
   let description=req.body.description;
   let items=querystring.unescape(req.body.items).split('\r\n');
@@ -257,6 +247,25 @@ app.post('/edit',(req,res)=>{
   });
   console.log(items);
   res.end();
+};
+
+app.get('/',function(req,res){
+  if (req.user) {
+    res.redirect('/home.html');
+    return;
+    // req.url='/home.html';
+    // console.log(req);
+    // serveStaticPage(req,res);
+  }
+  res.redirect('/login.html');
 });
+app.get('/deleteToDo',deleteToDo(req,res));
+app.get('/showSingleToDo',showSingleToDo(req,res));
+app.get('/login.html',serveLoginPage(req,res));
+app.get('/logout',logoutUser(req,res));
+app.post('/addNewTodo',addNewTodo(req,res));
+app.post('/login',verifyLogin(req,res));
+app.post('/addNewItem',addNewItem(req,res));
+app.post('/edit',editTodo(req,res));
 
 module.exports=app;
