@@ -3,7 +3,8 @@ const WebApp = require('./webapp');
 const querystring = require('querystring');
 const _registeredUsers=[
   {userName:'sree',name:'sreenadh',password:"password"},
-  {userName:'sreenu',name:'sreenu',password:"password"}];
+  {userName:'sreenu',name:'sreenu',password:"password"},
+  {userName:'sudhin',name:'sudhin',password:"password"}];
 let app=WebApp.create();
 let contentTypes={
   'html':"text/html",
@@ -141,6 +142,17 @@ const writeToDataFile=(filePath,content)=>{
   fs.writeFileSync(filePath,content);
 }
 
+const getAllToDo=(req)=>{
+  let filePath=`./data/${req.user.userName}ToDos.json`;
+  let allToDos=JSON.parse(fs.readFileSync(filePath,"utf-8"));
+  return allToDos;
+}
+
+const getSpeciicToDo=(req)=>{
+  let allToDos=getAllToDo(req);
+  return allToDos[req.cookies.title];
+}
+
 app.use(logRequest)
 app.use(loadUser);
 app.use(markAsDone);
@@ -150,21 +162,18 @@ app.addPostprocess(gotoToDo);
 app.addPostprocess(serveStaticPage);
 
 const deleteToDo=(req,res)=>{
-  let title=req.cookies.title;
   let userName=req.user.userName;
   let filePath=`./data/${userName}ToDos.json`;
   let sendingFilePath=`./public/js/todos.js`;
-  let currentContent=JSON.parse(fs.readFileSync(filePath,"utf-8"));
-  delete currentContent[title];
+  let currentContent=getAllToDo(req);
+  delete currentContent[req.cookies.title];
   writeToDataFile(filePath,JSON.stringify(currentContent));
   writeToDataFile(sendingFilePath,`var todos=${JSON.stringify(currentContent)}`);
   res.redirect('/viewAll.html')
 }
 
 const showSingleToDo=(req,res)=>{
-  let filePath=`./data/${req.user.userName}ToDos.json`;
-  let allToDos=JSON.parse(fs.readFileSync(filePath,"utf-8"));
-  let wantedToDo=allToDos[req.cookies.title];
+  let wantedToDo=getSpeciicToDo(req);
   if (!wantedToDo) {
     res.redirect('/fileNotFound.html');
     return ;
@@ -216,7 +225,7 @@ const addNewTodo=(req,res)=>{
   let filePath=`./data/${userName}ToDos.json`;
   let sendingFilePath=`./public/js/todos.js`;
   let newToDoData={'description':`${req.body.description}`,'itemList':[]};
-  let currentContent=JSON.parse(fs.readFileSync(filePath,"utf-8"));
+  let currentContent=getAllToDo(req);
   currentContent[`${req.body.title}`]=newToDoData;
   writeToDataFile(filePath,JSON.stringify(currentContent));
   writeToDataFile(sendingFilePath,`var todos=${JSON.stringify(currentContent)}`);
@@ -245,7 +254,7 @@ const editTodo=(req,res)=>{
   items=items.filter(function (item) {
     return item!="";
   });
-  console.log(items);
+  let allToDos=getAllToDo(req);
   res.end();
 };
 
@@ -259,13 +268,13 @@ app.get('/',function(req,res){
   }
   res.redirect('/login.html');
 });
-app.get('/deleteToDo',deleteToDo(req,res));
-app.get('/showSingleToDo',showSingleToDo(req,res));
-app.get('/login.html',serveLoginPage(req,res));
-app.get('/logout',logoutUser(req,res));
-app.post('/addNewTodo',addNewTodo(req,res));
-app.post('/login',verifyLogin(req,res));
-app.post('/addNewItem',addNewItem(req,res));
-app.post('/edit',editTodo(req,res));
+app.get('/deleteToDo',deleteToDo);
+app.get('/showSingleToDo',showSingleToDo);
+app.get('/login.html',serveLoginPage);
+app.get('/logout',logoutUser);
+app.post('/addNewTodo',addNewTodo);
+app.post('/login',verifyLogin);
+app.post('/addNewItem',addNewItem);
+app.post('/edit',editTodo);
 
 module.exports=app;
