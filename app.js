@@ -153,6 +153,21 @@ const getSpeciicToDo=(req)=>{
   return allToDos[req.cookies.title];
 }
 
+const itemCreater=(newItem)=>{
+  let itemObject={};
+  itemObject[newItem]=false;
+  return itemObject;
+}
+
+const ModifyTodo=(oldTodo,title,description,items)=>{
+  let todo={'description':description,'itemList':[]};
+  let oldItems=oldTodo.itemList;
+  items.forEach((item,index)=>{
+    todo.itemList.push(itemCreater(item));
+  })
+  return todo;
+}
+
 app.use(logRequest)
 app.use(loadUser);
 app.use(markAsDone);
@@ -248,14 +263,23 @@ const addNewItem=(req,res)=>{
 };
 
 const editTodo=(req,res)=>{
-  let title=req.body.title;;
+  let newTitle=req.body.title;
   let description=req.body.description;
+  let userName=req.user.userName;
+  let filePath=`./data/${userName}ToDos.json`;
+  let sendingFilePath=`./public/js/todos.js`;
   let items=querystring.unescape(req.body.items).split('\r\n');
   items=items.filter(function (item) {
     return item!="";
   });
   let allToDos=getAllToDo(req);
-  res.end();
+  let oldTodo=getSpeciicToDo(req);
+  let modifiedTodo=ModifyTodo(oldTodo,newTitle,description,items);
+  delete allToDos[req.cookies.title];
+  allToDos[newTitle]=modifiedTodo;
+  writeToDataFile(filePath,JSON.stringify(allToDos));
+  writeToDataFile(sendingFilePath,`var todos=${JSON.stringify(allToDos)}`);
+  res.redirect('/showSingleToDo');
 };
 
 app.get('/',function(req,res){
