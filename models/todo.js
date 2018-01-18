@@ -30,4 +30,10 @@ class Todo {
     });
     return li||"";
   }
+  editTitle(title){
+    this.title=title;
+  }
+  editDescription(description){
+    this.description=description;
+  }
 }
