@@ -219,8 +219,8 @@ const verifyLogin=(req,res)=>{
   let sessionid = new Date().getTime();
   res.setHeader('Set-Cookie',`sessionid=${sessionid}`);
   user.sessionid = sessionid;
-  let filePath=`./data/${user.userName}ToDos.json`;
   let sendingFilePath=`./public/js/todos.js`;
+  let filePath=process.env.COMMENT_STORE||`./data/${user.userName}ToDos.json`;
   let currentContent=JSON.parse(fs.readFileSync(filePath,"utf-8"));
   writeToDataFile(sendingFilePath,`var todos=${toS(currentContent)}`);
   writeToDataFile('./public/js/userName.js',`var user="Hello ${user.name}"`);

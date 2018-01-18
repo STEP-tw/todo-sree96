@@ -1,32 +1,26 @@
 const TodoItem = require('./todoitem.js');
 class Todo {
-  constructor(title) {
+  constructor(title,description='') {
     this.title=title;
-    this.listItem=[];
-  }
-  addDescription(description) {
     this.description=description;
+    this.listItems=[];
   }
   addNewListItem(item) {
-    this.listItems.push(new TodoItem(item));
+    let newItem=new TodoItem(item);
+    this.listItems.push(newItem);
   }
   getTitle() {
     return this.title;
   }
+  getDescription(){
+    return this.description;
+  }
   getAllListItems() {
     return this.listItems;
   }
-  isDone(item){
-    let oIndex;
-    let li=this.listItems.find(function (current,index) {
-      oIndex=index;
-      return Object.keys(current)[0]==listItem;
-    });
-    return this.listItems[oIndex][listItem];
-  }
   getSpecificListItem(listItem) {
     let li=this.listItems.find(function (current) {
-      return Object.keys(current)[0]==listItem;
+      return current[Object.keys(current)[0]]==listItem;
     });
     return li||"";
   }
@@ -36,4 +30,14 @@ class Todo {
   editDescription(description){
     this.description=description;
   }
+  isDone(item){
+    let oIndex;
+    let li=this.listItems.find(function (current,index) {
+      oIndex=index;
+      return current[Object.keys(current)[0]]==listItem;
+    });
+    return this.listItems[oIndex][listItem];
+  }
 }
+
+module.exports=Todo;
