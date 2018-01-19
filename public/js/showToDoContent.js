@@ -1,5 +1,5 @@
 const showToDoContent=function () {
-  addNameAndLogout();
+  addName();
   let content=document.getElementById('content');
   document.getElementById('title').innerText=todoTitle;
   let itemList=[];

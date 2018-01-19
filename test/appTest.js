@@ -119,5 +119,70 @@ request(app,{method:'GET',url:'/bad',user:{userName:'sree',name:'sreenadh',passw
       });
     });
   });
+  describe('/addNewTodo', function(){
+    it('should add a new todo to all todos', function(done ){
+      let req = {method:'POST',url:'/addNewTodo',user:{userName:'sree',name:'sreenadh',password:"password"},body:'title=This is title&description=nice'}
+      request(app,req,res=>{
+        th.should_be_redirected_to(res,'/home.html');
+        done();
+      })
+    });
+  });
+  describe('/showSingleToDo', function(){
+    let req = {method:'GET',url:'/showSingleToDo',user:{userName:'sree',name:'sreenadh',password:"password"},headers:{cookie:'title=This is title'}}
+    it('should show a todo from all todos', function(done ){
+      request(app,req,res=>{
+        th.should_be_redirected_to(res,'/showSingleToDo.html');
+        req['url'] = '/js/toDoContent.js';
+        done();
+      })
+    });
+    it('should show todo (checking content)',(done)=>{
+      request(app,req,res=>{
+        th.body_contains(res,'This is title');
+        done();
+      })
+    })
+  });
+  describe('/deleteToDo', function(){
+    it('should delete a todo from all todos', function(done ){
+      let req = {method:'GET',url:'/deleteToDo',user:{userName:'sree',name:'sreenadh',password:"password"},headers:{cookie:'title=This is title'}}
+      request(app,req,res=>{
+        th.should_be_redirected_to(res,'/viewAll.html');
+        done();
+      })
+    });
+  });
+  describe('/addNewItem', function(){
+    let req = {method:'POST',url:'/addNewItem',user:{userName:'sree',name:'sreenadh',password:"password"},body:'item=Item1',headers:{cookie:'title=ThisIsTitle'}}
+    it('should add a newItem to a todo', function(done ){
+      request(app,req,res=>{
+        th.should_be_redirected_to(res,'/showSingleToDo');
+        req['url']='/js/todos.js'
+        done();
+      })
+    });
+    it('Should add item to toDoContent', function(){
+      request(app,req,res=>{
+        th.body_contains(res,'Item1');
+      })
+    });
+  });
+
+  describe('/editTodo', function(){
+    let req = {method:'POST',url:'/edit',user:{userName:'sree',name:'sreenadh',password:"password"},body:'title=ThisIsTitle&description=ThisIsDesc&items=Item1\r\nitem 5\r\n',headers:{cookie:'title=ThisIsTitle'}}
+    it('should add a newItem to a todo', function(done ){
+      request(app,req,res=>{
+        th.should_be_redirected_to(res,'/showSingleToDo');
+        req['url']='/js/todos.js'
+        done();
+      })
+    });
+    it('Should add item to toDoContent', function(){
+      request(app,req,res=>{
+        th.body_contains(res,'ThisIsDesc');
+      })
+    });
+  });
 
 });

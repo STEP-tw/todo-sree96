@@ -9,7 +9,7 @@ const fillItemList=function () {
 }
 
 const preFillToDoContent=function () {
-  addNameAndLogout();
+  addName();
   document.getElementById('title').value=todoTitle;
   document.getElementById('description').value=toDoContent.description;
   fillItemList();

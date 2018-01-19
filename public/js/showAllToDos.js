@@ -1,5 +1,5 @@
 const showAllToDos=function () {
-  addNameAndLogout();
+  addName();
   let allToDoList=document.getElementById('allToDoList');
   let titles=Object.keys(todos);
   let innerHtml='';

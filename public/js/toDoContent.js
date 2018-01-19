@@ -1,2 +1,2 @@
-var toDoContent={"description":"desc","itemList":[{"test":false},{"hi+hi+hi+hi":false},{"tea":false},{"ls":false}]};
-var todoTitle="new"
+var toDoContent={"description":"nice","itemList":[]};
+var todoTitle="This is title"
