@@ -30,11 +30,21 @@ describe('TodoItem', function(){
       assert.deepEqual(todoItem.isDone(),false);
     });
   });
-  describe('#setStatus()', function(){
-    it('setStatus function should set the status of item', function(){
+  describe('#check()', function(){
+    it('check function should set the status of item to true', function(){
       assert.deepEqual(todoItem,{'item':'tea','status':false});
-      todoItem.setStatus(true);
+      todoItem.check();
       assert.deepEqual(todoItem,{'item':'tea','status':true});
+    });
+  });
+
+  describe('#uncheck()', function(){
+    it('uncheck function should set the status of item to false', function(){
+      assert.deepEqual(todoItem,{'item':'tea','status':false});
+      todoItem.check();
+      assert.deepEqual(todoItem,{'item':'tea','status':true});
+      todoItem.uncheck();
+      assert.deepEqual(todoItem,{'item':'tea','status':false});
     });
   });
 });

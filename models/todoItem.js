@@ -12,8 +12,11 @@ class TodoItem {
   isDone(){
     return this.status;
   }
-  setStatus(status){
-    this.status=status;
+  check(){
+    this.status=true;
+  }
+  uncheck(){
+    this.status=false;
   }
 }
 
