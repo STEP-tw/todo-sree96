@@ -88,5 +88,6 @@ app.post('/addNewTodo',handlerLib.addNewTodo);
 app.post('/login',handlerLib.verifyLogin);
 app.post('/addNewItem',handlerLib.addNewItem);
 app.post('/edit',handlerLib.editTodo);
+app.post('/deleteItem',handlerLib.deleteItemAndGetUpdatedList);
 
 module.exports=app;

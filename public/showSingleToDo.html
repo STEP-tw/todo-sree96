@@ -4,21 +4,26 @@
     <meta charset="utf-8">
     <title>TO DO</title>
     <script src="./js/markAsDoneOrUndone.js" charset="utf-8"></script>
-    <script src="./js/userName.js" charset="utf-8"></script>
-    <script src="./js/addName.js" charset="utf-8"></script>
-    <script src="./js/toDoContent.js" charset="utf-8"></script>
-    <script src="./js/showToDoContent.js" charset="utf-8"></script>
+    <script src="./js/showSingleToDo.js" charset="utf-8"></script>
   </head>
   <body>
     <b id="userName"></b><br />
     <a href="/logout">Logout</a>
     <a href="/home.html">Home</a>
     <a href="/deleteToDo">Delete</a>
-    <a href="/addToToDoList.html">Add New Item</a>
-    <a href="/editAll.html">Edit</a>
-    <h3 id="title" style="text-align:center"></h3>
     <p id="content">
-      <AllAboutTodo>
+      TITLE : <toDoTitle></toDoTitle>
+      <br>
+      DESCRIPTION : <toDoDesc></toDoDesc>
+      <br>
+      ITEMS : <allItems></allItems>
+      <br>
     </p>
+    <br>
+    <br>
+    <form action="/addNewItem" method="POST">
+      Item: <input type="text" name="item" required><br/>
+      <input type="submit" value="Add Item"></button>
+    </form>
   </body>
 </html>

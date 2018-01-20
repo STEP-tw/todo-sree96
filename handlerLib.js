@@ -2,11 +2,13 @@ const fs = require('fs');
 const qs = require('querystring');
 const utils = require('./utils.js');
 const User = require('./lib/user.js');
+const _registeredUsers=[{userName:'sree',name:'sreenadh',password:"password"},
+  {userName:'pranavb',name:'pranavb',password:'password'}];
 
-const _registeredUsers=[
-  {userName:'sree',name:'sreenadh',password:"password"},
-  {userName:'sreenu',name:'sreenu',password:"password"},
-  {userName:'sudhin',name:'sudhin',password:"password"}];
+let data = {};
+let pranavb = new User('pranavb');
+data['pranavb'] = pranavb;
+
 
 const serve404=(req,res)=>{
   res.statusCode = 404;
@@ -37,45 +39,14 @@ const setContentType=function (res,resourcePath) {
   res.setHeader("Content-Type",contentTypes[extension]);
 };
 
-const getAllToDo=(req)=>{
-  let filePath=process.env.COMMENT_STORE || `./data/${req.user.userName}ToDos.json`;
-  let allToDos=JSON.parse(fs.readFileSync(filePath,"utf-8"));
-  return allToDos;
-};
-
-const getSpeciicToDo=(req)=>{
-  let allToDos=getAllToDo(req);
-  return allToDos[`${req.cookies.title}`];
-}
-
 const toS = o=>JSON.stringify(o,null,2);
-
-const itemCreater=(newItem)=>{
-  let itemObject={};
-  itemObject[newItem]=false;
-  return itemObject;
-}
-
-const ModifyTodo=(oldTodo,title,description,items)=>{
-  let todo={'description':description,'itemList':[]};
-  let oldItems=oldTodo.itemList;
-  items.forEach((item,index)=>{
-    todo.itemList.push(itemCreater(item));
-  })
-  return todo;
-}
 
 //==========================================================================
 
 const deleteToDo=(req,res)=>{
-  let userName=req.user.userName;
-  let filePath=process.env.COMMENT_STORE||`./data/${userName}ToDos.json`;
-  let sendingFilePath=`./public/js/todos.js`;
-  let currentContent=getAllToDo(req);
-  delete currentContent[req.cookies.title];
-  fs.writeFileSync(filePath,JSON.stringify(currentContent));
-  fs.writeFileSync(sendingFilePath,`var todos=${JSON.stringify(currentContent)}`);
-  res.redirect('/viewAll.html')
+  let currUser = data[`${req.user.userName}`];
+  currUser.deleteToDo(`${req.cookies.currentToDo}`)
+  res.redirect('/home.html')
 };
 
 const serveStaticPage=function (req,res) {
@@ -98,25 +69,22 @@ const serveStaticPage=function (req,res) {
 };
 
 const showSingleToDo=(req,res)=>{
-  let wantedToDo=getSpeciicToDo(req);
-  if (!wantedToDo) {
-    res.redirect('/fileNotFound.html');
-    return ;
-  };
-  let filePath='./public/js/toDoContent.js';
-  fs.writeFileSync(filePath,`var toDoContent=${JSON.stringify(wantedToDo)};\nvar todoTitle="${req.cookies.title}"`);
-  res.redirect('/showSingleToDo.html');
+  let currUser = data[`${req.user.userName}`];
+  let currToDo = currUser.getToDo(`${req.cookies.currentToDo}`)
+  let toDoPage = fs.readFileSync('./public/showSingleToDo.html','utf8');
+  toDoPage = toDoPage.replace('<toDoTitle></toDoTitle>',currToDo.getTitle());
+  toDoPage = toDoPage.replace('<toDoDesc></toDoDesc>',currToDo.getDesc());
+  toDoPage = toDoPage.replace('<allItems></allItems>', currToDo.getAllItemsInHtmlList());
+  res.write(toDoPage);
+  res.end();
 };
 
 const addNewTodo=(req,res)=>{
   let userName=req.user.userName;
-  let filePath=process.env.COMMENT_STORE||`./data/${userName}ToDos.json`;
-  let sendingFilePath=`./public/js/todos.js`;
-  let newToDoData={'description':`${req.body.description}`,'itemList':[]};
-  let currentContent=getAllToDo(req);
-  currentContent[`${req.body.title}`]=newToDoData;
-  fs.writeFileSync(filePath,JSON.stringify(currentContent));
-  fs.writeFileSync(sendingFilePath,`var todos=${JSON.stringify(currentContent)}`);
+  let currUser = data[`${userName}`];
+  let title = req.body.title;
+  let description = req.body.description;
+  currUser.addToDo(title,description);
   res.redirect('/home.html')
 };
 
@@ -147,7 +115,7 @@ const verifyLogin=(req,res)=>{
     res.redirect('/login.html');
     return;
   }
-  let sessionid = new Date().getTime();
+  let sessionid = process.env.sessionid ||new Date().getTime();
   res.setHeader('Set-Cookie',`sessionid=${sessionid}`);
   user.sessionid = sessionid;
   // let sendingFilePath=`./public/js/todos.js`;
@@ -159,9 +127,11 @@ const verifyLogin=(req,res)=>{
 
 const serveHomePage=(req,res)=>{
   let homePage = fs.readFileSync('./public/home.html','utf8');
+  let currUser = data[`${req.user.userName}`];
   res.setHeader('Content-Type','text/html');
   res.statusCode = 200;
   homePage = homePage.replace('<userName></userName>',req.user['name']);
+  homePage = homePage.replace('<allToDoTitles></allToDoTitles>',currUser.getToDoTitlesInHtmlList('/showSingleToDo'));
   res.write(homePage);
   res.end();
 }
@@ -187,37 +157,9 @@ const logoutUser=(req,res)=>{
 };
 
 const addNewItem=(req,res)=>{
-  let newToDoItem={};
-  let userName=req.user.userName;
-  let filePath=process.env.COMMENT_STORE||`./data/${userName}ToDos.json`;
-  let sendingFilePath=`./public/js/todos.js`;
-  let title=req.cookies.title;
-  let item=req.body.item;
-  newToDoItem[`${item}`]=false;
-  let currentContent=JSON.parse(fs.readFileSync(filePath,"utf-8"));
-  currentContent[title].itemList.push(newToDoItem);
-  fs.writeFileSync(filePath,JSON.stringify(currentContent));
-  fs.writeFileSync(sendingFilePath,`var todos=${JSON.stringify(currentContent)}`);
-  res.redirect('/showSingleToDo');
-};
-
-const editTodo=(req,res)=>{
-  let newTitle=req.body.title;
-  let description=req.body.description;
-  let userName=req.user.userName;
-  let filePath=process.env.COMMENT_STORE||`./data/${userName}ToDos.json`;
-  let sendingFilePath=`./public/js/todos.js`;
-  let items=qs.unescape(req.body.items).split('\r\n');
-  items=items.filter(function (item) {
-    return item!="";
-  });
-  let allToDos=getAllToDo(req);
-  let oldTodo=getSpeciicToDo(req);
-  let modifiedTodo=ModifyTodo(oldTodo,newTitle,description,items);
-  delete allToDos[req.cookies.title];
-  allToDos[newTitle]=modifiedTodo;
-  fs.writeFileSync(filePath,JSON.stringify(allToDos));
-  fs.writeFileSync(sendingFilePath,`var todos=${JSON.stringify(allToDos)}`);
+  let currUser = data[`${req.user.userName}`];
+  let currToDoTitle = req.cookies.currentToDo;
+  currUser.addItemTo(currToDoTitle,req.body.item);
   res.redirect('/showSingleToDo');
 };
 
@@ -234,6 +176,15 @@ const redirectLoggedOutUserToLogin = (req,res)=>{
   }
 };
 
+const deleteItemAndGetUpdatedList = (req,res)=>{
+  let currentToDo = req.cookies.currentToDo;
+  let currUser = data[`${req.user.userName}`];
+  currUser.deleteItemOf(currentToDo,req.body['item']);
+  currTodo = currUser.getToDo(currentToDo);
+  updatedItemList = currTodo.getItemsDescInList();
+  res.write(JSON.stringify(updatedItemList));
+  res.end();
+};
 
 module.exports={
   deleteToDo,
@@ -246,8 +197,8 @@ module.exports={
   serveLoginPage,
   logoutUser,
   addNewItem,
-  editTodo,
   redirectLoggedOutUserToLogin,
   redirectLoggedInUserToHome,
-  serveHomePage
+  serveHomePage,
+  deleteItemAndGetUpdatedList
 }
