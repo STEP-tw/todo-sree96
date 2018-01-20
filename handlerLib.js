@@ -154,7 +154,6 @@ const verifyLogin=(req,res)=>{
   // let filePath=process.env.COMMENT_STORE||`./data/${user.userName}ToDos.json`;
   // let currentContent=JSON.parse(fs.readFileSync(filePath,"utf-8"));
   // fs.writeFileSync(sendingFilePath,`var todos=${toS(currentContent)}`);
-  // fs.writeFileSync('./public/js/userName.js',`var user="Hello ${user.name}"`);
   res.redirect('/home.html');
 };
 

@@ -102,24 +102,7 @@ request(app,{method:'GET',url:'/bad',user:{userName:'sree',name:'sreenadh',passw
       })
     });
   });
-  describe('GET /addNewTodo.html', function(){
-      it('serves an addNewTodo page if loggedin', function(done){
-      request(app,{method:'GET',url:'/addNewTodo.html',user:{userName:'sree',name:'sreenadh',password:"password"}},res=>{
-        th.status_is_ok(res);
-        th.content_type_is(res,'text/html');
-        th.body_contains(res,"Description: ");
-        th.body_contains(res,"Logout");
-        th.body_contains(res,"Home");
-        done();
-      });
-    });
-      it('serves an addNewTodo page if loggedin', function(done){
-      request(app,{method:'GET',url:'/addNewTodo.html'},res=>{
-        th.should_be_redirected_to(res,'/login.html');
-        done();
-      });
-    });
-  });
+
   describe('/addNewTodo', function(){
     it('should add a new todo to all todos', function(done ){
       let req = {method:'POST',url:'/addNewTodo',user:{userName:'sree',name:'sreenadh',password:"password"},body:'title=This is title&description=nice'}

@@ -15,10 +15,16 @@
         </div>
       </div>
       <div class="links">
-        <h3><a href="/addNewTodo.html">ADD NEW TO-DO</a></h3>
         <h3><a href="/viewAll.html">VIEW ALL</a></h3>
         <allToDoTitles></allToDoTitles>
       </div>
+      <br>
+      <br>
+      <form action="/addNewTodo" method="POST">
+        Title: <input type="text" name="title" required><br />
+        Description: <input type="text" name="description"><br />
+        <button type="submit">Create</button>
+      </form>
     </div>
   </body>
 </html>
