@@ -63,11 +63,14 @@ const markAsNotDone=(req,res)=> {
 
 app.use(handlerLib.logRequest)
 app.use(handlerLib.loadUser);
+app.use(handlerLib.redirectLoggedInUserToHome);
+app.use(handlerLib.redirectLoggedOutUserToLogin);
 app.use(markAsDone);
 app.use(markAsNotDone);
 
 app.addPostprocess(gotoToDo);
 app.addPostprocess(handlerLib.serveStaticPage);
+
 
 app.get('/',function(req,res){
   if (req.user) {
@@ -76,6 +79,7 @@ app.get('/',function(req,res){
   }
   res.redirect('/login.html');
 });
+app.get('/home.html',handlerLib.serveHomePage);
 app.get('/deleteToDo',handlerLib.deleteToDo);
 app.get('/showSingleToDo',handlerLib.showSingleToDo);
 app.get('/login.html',handlerLib.serveLoginPage);

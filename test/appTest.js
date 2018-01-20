@@ -91,6 +91,7 @@ request(app,{method:'GET',url:'/bad',user:{userName:'sree',name:'sreenadh',passw
         th.status_is_ok(res);
         th.content_type_is(res,'text/html');
         th.body_contains(res,"HOME PAGE");
+        th.body_contains(res,'sreenadh');
         done();
       })
     });

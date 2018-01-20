@@ -1,50 +1,48 @@
-let chai = require('chai');
-let assert = chai.assert;
-let TodoItem=require('../models/todoItem.js');
-let todoItem={};
-describe('TodoItem', function(){
-  beforeEach(function(){
-    todoItem=new TodoItem("tea");
-  });
-  describe('new TodoItem', function(){
-    it('should create a new todoItem with status false', function(){
-      assert.deepEqual(todoItem,{'item':'tea','status':false});
+let assert = require('chai').assert;
+let ToDoItem = require('../lib/toDoItem.js');
+
+describe('ToDoItem Module',()=>{
+  describe('editDesc',()=>{
+    it('should edit description of ToDoItem',()=>{
+      let toDoItem = new ToDoItem('Do Work');
+      toDoItem.editDesc('Do_Work');
+      assert.equal(toDoItem.getDesc(),'Do_Work');
+    })
+  })
+
+  describe('check',()=>{
+    it('should set checkedValue to true',()=>{
+      let toDoItem = new ToDoItem('Do Work');
+      toDoItem.check();
+      assert.isOk(toDoItem.getCheckedValue());
+    })
+  })
+
+  describe('uncheck',()=>{
+    it('should set checkedValue to false',()=>{
+      let toDoItem = new ToDoItem('Do Work');
+      toDoItem.uncheck();
+      assert.isNotOk(toDoItem.getCheckedValue());
+    })
+  })
+
+  describe('getDesc',()=>{
+    it('should give a toDoItem description',()=>{
+      let toDoItem = new ToDoItem('Do Work');
+      assert.equal(toDoItem.getDesc(),"Do Work");
+      toDoItem.editDesc("Sleep")
+      assert.equal(toDoItem.getDesc(),"Sleep");
+    })
+  })
+
+  describe('getCheckedValue', function(){
+    it('should return current checkedValue of Item', function(){
+      let toDoItem = new ToDoItem('Do Work');
+      assert.isNotOk(toDoItem.getCheckedValue());
+      toDoItem.check();
+      assert.isOk(toDoItem.getCheckedValue());
     });
-  });
-  describe('#editItem()', function(){
-    it('editItem function should edit the item', function(){
-      assert.deepEqual(todoItem,{'item':'tea','status':false});
-      todoItem.editItem('coffee');
-      assert.deepEqual(todoItem,{'item':'coffee','status':false});
-    });
-  });
-  describe('#getItem()', function(){
-    it('getItem function should return the current item', function(){
-      assert.deepEqual(todoItem.getItem(),'tea');
-      todoItem.editItem('coffee');
-      assert.deepEqual(todoItem.getItem(),'coffee');
-    });
-  });
-  describe('#isDone()', function(){
-    it('isDone function should return the current status of item', function(){
-      assert.deepEqual(todoItem.isDone(),false);
-    });
-  });
-  describe('#check()', function(){
-    it('check function should set the status of item to true', function(){
-      assert.deepEqual(todoItem,{'item':'tea','status':false});
-      todoItem.check();
-      assert.deepEqual(todoItem,{'item':'tea','status':true});
-    });
+
   });
 
-  describe('#uncheck()', function(){
-    it('uncheck function should set the status of item to false', function(){
-      assert.deepEqual(todoItem,{'item':'tea','status':false});
-      todoItem.check();
-      assert.deepEqual(todoItem,{'item':'tea','status':true});
-      todoItem.uncheck();
-      assert.deepEqual(todoItem,{'item':'tea','status':false});
-    });
-  });
-});
+})

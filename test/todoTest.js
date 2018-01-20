@@ -1,63 +1,134 @@
-let chai = require('chai');
-let assert = chai.assert;
-let Todo=require('../models/todo.js');
-let TodoItem=require('../models/todoItem.js');
-let todo={};
+let assert = require('chai').assert;
+let ToDo = require('../lib/toDo.js');
+let ToDoItem = require('../lib/toDoItem.js');
 
-describe('Todo', function(){
-  beforeEach(function(){
-    todo=new Todo("Home Work","Sujects to finish home work");
+describe('ToDo Module',()=>{
+  describe('getTitle',()=>{
+      it('should return title of ToDo',()=>{
+        let todo = new ToDo('MyToDo');
+        assert.equal(todo.getTitle(),'MyToDo');
+      });
   });
-  describe('Creates New Todo', function(){
-    it('Creates a new todo with title,description and empty items list', function(){
-      assert.deepEqual(todo,{'title':"Home Work",'description':"Sujects to finish home work",'listItems':[]});
+
+  describe('editTitle',()=>{
+    it('should edit title of ToDo',()=>{
+      let todo = new ToDo('MyToDo');
+      todo.editTitle('New ToDo');
+      assert.equal(todo.getTitle(),'New ToDo');
     });
   });
-  describe('#getTitle', function(){
-    it('Should return the title of a todo', function(){
-      assert.deepEqual(todo.getTitle(),"Home Work");
+
+  describe('getDescription',()=>{
+      it('should return description of ToDo',()=>{
+        let todo = new ToDo('MyToDo','desc');
+        assert.equal(todo.getDesc(),'desc');
+      });
+  });
+
+  describe('editDescription',()=>{
+    it('should edit description of ToDo',()=>{
+      let todo = new ToDo('My Description');
+      todo.editDesc('New Description');
+      assert.equal(todo.getDesc(),'New Description');
     });
   });
-  describe('#getDescription', function(){
-    it('Should return the description of a todo', function(){
-      assert.deepEqual(todo.getDescription(),"Sujects to finish home work");
+
+  describe('getItems', function(){
+    it('should return allItems', function(){
+      let expected = {'Item1':new ToDoItem('Item1'),'Item2':new ToDoItem('Item2')};
+      let todo = new ToDo('Title');
+      todo.addItem('Item1');
+      todo.addItem('Item2');
+      assert.deepEqual(todo.getItems(),expected);
     });
   });
-  describe('#addNewListItem', function(){
-    it('Should add a list item to the todo', function(){
-      let expected={'title':"Home Work",'description':"Sujects to finish home work",'listItems':[{'item':'Maths','status':false}]};
-      todo.addNewListItem("Maths")
-      assert.deepEqual(todo,expected);
+
+  describe('getItemByDesc',()=>{
+    it('should return the toDoItem acc to desc given',()=>{
+      let todo = new ToDo('My ToDo');
+      let item1 = new ToDoItem('Item 1');
+      let item2 = new ToDoItem('Item 2');
+      todo.addItem('Item 1');
+      todo.addItem('Item 2');
+      assert.deepEqual(todo.getItemByDesc('Item 1'),item1);
+      assert.deepEqual(todo.getItemByDesc('Item 2'),item2);
+      assert.deepEqual(todo.getItems(),{'Item 1':item1,'Item 2':item2})
     });
   });
-  describe('#getSpecificListItem()', function(){
-    it('Should return specified list item from a todo when it is present', function(){
-      let expected={'item':'English','status':false};
-      todo.addNewListItem("Maths");
-      todo.addNewListItem("English");
-      assert.deepEqual(todo.getSpecificListItem('English'),expected);
-    });
-    it('Should return "" list item from a todo when it is not present', function(){
-      todo.addNewListItem("Maths");
-      todo.addNewListItem("English");
-      assert.deepEqual(todo.getSpecificListItem('Science'),'');
+
+  describe('addItem',()=>{
+    it('should add item object to items with item Desc as key',()=>{
+      let todo = new ToDo('My ToDo');
+      let item1 = new ToDoItem('Item 1')
+      todo.addItem('Item 1');
+      assert.deepEqual(todo.getItemByDesc('Item 1'),item1);
     });
   });
-  describe('#editTitle', function(){
-    it('Should edit the title of a todo', function(){
-      let expected={'title':"Studies",'description':"Sujects to finish home work",'listItems':[]};
-      assert.deepEqual(todo,{'title':"Home Work",'description':"Sujects to finish home work",'listItems':[]});
-      todo.editTitle("Studies")
-      assert.deepEqual(todo,expected);
+
+  describe('deleteItem',()=>{
+    it('should delete item by given desc',()=>{
+      let todo = new ToDo('My ToDo');
+      let item1 = new ToDoItem('Item 1')
+      todo.addItem('Item 1');
+      todo.deleteItem('Item 1');
+      assert.deepEqual(todo.getItems(),{});
     });
   });
-  describe('#editDescription', function(){
-    it('Should edit the description of a todo', function(){
-      let expected={'title':"Home Work",'description':"Sujects having home work to do",'listItems':[]};
-      assert.deepEqual(todo,{'title':"Home Work",'description':"Sujects to finish home work",'listItems':[]});
-      todo.editDescription("Sujects having home work to do")
-      assert.deepEqual(todo,expected);
+
+  describe('getItemsDescInList',()=>{
+    it('should return list of all toDoItem description',()=>{
+      let todo = new ToDo('My ToDo');
+      let item1 = new ToDoItem('Item 1');
+      let item2 = new ToDoItem('Item 2');
+      todo.addItem('Item 1');
+      todo.addItem('Item 2');
+      assert.deepEqual(todo.getItemsDescInList(),['Item 1','Item 2'])
     });
   });
-  
-});
+
+  describe('editDescOfItem',()=>{
+    it('should edit description of given item by new desc',()=>{
+      let todo = new ToDo('My ToDo');
+      let item1 = new ToDoItem('Item 1')
+      todo.addItem('Item 1');
+      let newItem = new ToDoItem('New Item');
+      todo.editDescOfItem('Item 1','New Item');
+      let allItems = {'New Item':newItem};
+      assert.deepEqual(todo.getItems(),allItems);
+    });
+  });
+
+  describe('checkItem',()=>{
+    it('should set checkedValue of given item to true',()=>{
+      let todo = new ToDo('My ToDo');
+      todo.addItem('Item 1');
+      todo.checkItem('Item 1');
+      let item1 = new ToDoItem('Item 1')
+      item1.check();
+      let allItems = {'Item 1':item1};
+      assert.deepEqual(todo.getItems(),allItems)
+    });
+  });
+
+  describe('uncheckItem',()=>{
+    it('should set checkedValue of given item to true',()=>{
+      let todo = new ToDo('My ToDo');
+      todo.addItem('Item 1');
+      todo.uncheckItem('Item 1');
+      let item1 = new ToDoItem('Item 1')
+      item1.uncheck();
+      let allItems = {'Item 1':item1};
+      assert.deepEqual(todo.getItems(),allItems)
+    });
+  });
+
+  describe('getAllItemsInHtmlList',()=>{
+    it('should return a html list string',()=>{
+      let expected=`<ul><li id="Item 1">Item 1<button id="Item 1">Delete</button></li><li id="Item 2">Item 2<button id="Item 2">Delete</button></li></ul>`;
+      let todo = new ToDo('My ToDo');
+      todo.addItem('Item 1');
+      todo.addItem('Item 2');
+      assert.deepEqual(todo.getAllItemsInHtmlList(),expected)
+    });
+  });
+})

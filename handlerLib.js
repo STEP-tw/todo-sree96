@@ -149,13 +149,23 @@ const verifyLogin=(req,res)=>{
   let sessionid = new Date().getTime();
   res.setHeader('Set-Cookie',`sessionid=${sessionid}`);
   user.sessionid = sessionid;
-  let sendingFilePath=`./public/js/todos.js`;
-  let filePath=process.env.COMMENT_STORE||`./data/${user.userName}ToDos.json`;
-  let currentContent=JSON.parse(fs.readFileSync(filePath,"utf-8"));
-  fs.writeFileSync(sendingFilePath,`var todos=${toS(currentContent)}`);
-  fs.writeFileSync('./public/js/userName.js',`var user="Hello ${user.name}"`);
+  // let sendingFilePath=`./public/js/todos.js`;
+  // let filePath=process.env.COMMENT_STORE||`./data/${user.userName}ToDos.json`;
+  // let currentContent=JSON.parse(fs.readFileSync(filePath,"utf-8"));
+  // fs.writeFileSync(sendingFilePath,`var todos=${toS(currentContent)}`);
+  // fs.writeFileSync('./public/js/userName.js',`var user="Hello ${user.name}"`);
   res.redirect('/home.html');
 };
+
+const serveHomePage=(req,res)=>{
+  let homePage = fs.readFileSync('./public/home.html','utf8');
+  res.setHeader('Content-Type','text/html');
+  res.statusCode = 200;
+  homePage = homePage.replace('<userName></userName>',req.user['name']);
+  console.log(homePage);
+  res.write(homePage);
+  res.end();
+}
 
 const serveLoginPage=(req,res)=>{
   if (req.user) {
@@ -212,6 +222,19 @@ const editTodo=(req,res)=>{
   res.redirect('/showSingleToDo');
 };
 
+const redirectLoggedInUserToHome = (req,res)=>{
+  if(req.urlIsOneOf(['/','/login.html']) && req.user) {
+    res.redirect('/home.html');
+  }
+};
+
+const redirectLoggedOutUserToLogin = (req,res)=>{
+  let urlAllowedForOnlyLoggedIn = ['/', '/addNewTodo.html', '/addToToDoList.html', '/editAll.html', '/home.html', 'showSingleToDo.html', '/viewAll.html', '/deleteToDo', '/showSingleToDo', '/addNewTodo', '/addNewItem', '/edit'];
+  if(req.urlIsOneOf(urlAllowedForOnlyLoggedIn) && !req.user) {
+    res.redirect('/login.html');
+  }
+};
+
 
 module.exports={
   deleteToDo,
@@ -224,5 +247,8 @@ module.exports={
   serveLoginPage,
   logoutUser,
   addNewItem,
-  editTodo
+  editTodo,
+  redirectLoggedOutUserToLogin,
+  redirectLoggedInUserToHome,
+  serveHomePage
 }
