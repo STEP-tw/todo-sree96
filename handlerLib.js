@@ -38,7 +38,7 @@ const setContentType=function (res,resourcePath) {
 };
 
 const getAllToDo=(req)=>{
-  let filePath=`./data/${req.user.userName}ToDos.json`
+  let filePath=process.env.COMMENT_STORE || `./data/${req.user.userName}ToDos.json`;
   let allToDos=JSON.parse(fs.readFileSync(filePath,"utf-8"));
   return allToDos;
 };
@@ -69,7 +69,7 @@ const ModifyTodo=(oldTodo,title,description,items)=>{
 
 const deleteToDo=(req,res)=>{
   let userName=req.user.userName;
-  let filePath=`./data/${userName}ToDos.json`;
+  let filePath=process.env.COMMENT_STORE||`./data/${userName}ToDos.json`;
   let sendingFilePath=`./public/js/todos.js`;
   let currentContent=getAllToDo(req);
   delete currentContent[req.cookies.title];
@@ -110,7 +110,7 @@ const showSingleToDo=(req,res)=>{
 
 const addNewTodo=(req,res)=>{
   let userName=req.user.userName;
-  let filePath=`./data/${userName}ToDos.json`;
+  let filePath=process.env.COMMENT_STORE||`./data/${userName}ToDos.json`;
   let sendingFilePath=`./public/js/todos.js`;
   let newToDoData={'description':`${req.body.description}`,'itemList':[]};
   let currentContent=getAllToDo(req);
@@ -189,7 +189,7 @@ const logoutUser=(req,res)=>{
 const addNewItem=(req,res)=>{
   let newToDoItem={};
   let userName=req.user.userName;
-  let filePath=`./data/${userName}ToDos.json`;
+  let filePath=process.env.COMMENT_STORE||`./data/${userName}ToDos.json`;
   let sendingFilePath=`./public/js/todos.js`;
   let title=req.cookies.title;
   let item=req.body.item;
@@ -205,7 +205,7 @@ const editTodo=(req,res)=>{
   let newTitle=req.body.title;
   let description=req.body.description;
   let userName=req.user.userName;
-  let filePath=`./data/${userName}ToDos.json`;
+  let filePath=process.env.COMMENT_STORE||`./data/${userName}ToDos.json`;
   let sendingFilePath=`./public/js/todos.js`;
   let items=qs.unescape(req.body.items).split('\r\n');
   items=items.filter(function (item) {

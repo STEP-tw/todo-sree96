@@ -128,17 +128,9 @@ request(app,{method:'GET',url:'/bad',user:{userName:'sree',name:'sreenadh',passw
       })
     })
   });
-  describe('/deleteToDo', function(){
-    it('should delete a todo from all todos', function(done ){
-      let req = {method:'GET',url:'/deleteToDo',user:{userName:'sree',name:'sreenadh',password:"password"},headers:{cookie:'title=This is title'}}
-      request(app,req,res=>{
-        th.should_be_redirected_to(res,'/viewAll.html');
-        done();
-      })
-    });
-  });
+
   describe('/addNewItem', function(){
-    let req = {method:'POST',url:'/addNewItem',user:{userName:'sree',name:'sreenadh',password:"password"},body:'item=Item1',headers:{cookie:'title=ThisIsTitle'}}
+    let req = {method:'POST',url:'/addNewItem',user:{userName:'sree',name:'sreenadh',password:"password"},body:'item=Item1',headers:{cookie:'title=This is title'}}
     it('should add a newItem to a todo', function(done ){
       request(app,req,res=>{
         th.should_be_redirected_to(res,'/showSingleToDo');
@@ -154,7 +146,7 @@ request(app,{method:'GET',url:'/bad',user:{userName:'sree',name:'sreenadh',passw
   });
 
   describe('/editTodo', function(){
-    let req = {method:'POST',url:'/edit',user:{userName:'sree',name:'sreenadh',password:"password"},body:'title=ThisIsTitle&description=ThisIsDesc&items=Item1\r\nitem 5\r\n',headers:{cookie:'title=ThisIsTitle'}}
+    let req = {method:'POST',url:'/edit',user:{userName:'sree',name:'sreenadh',password:"password"},body:'title=This is title&description=ThisIsDesc&items=Item1\r\nitem 5\r\n',headers:{cookie:'title=This is title'}}
     it('should add a newItem to a todo', function(done ){
       request(app,req,res=>{
         th.should_be_redirected_to(res,'/showSingleToDo');
@@ -169,4 +161,13 @@ request(app,{method:'GET',url:'/bad',user:{userName:'sree',name:'sreenadh',passw
     });
   });
 
+  describe('/deleteToDo', function(){
+    it('should delete a todo from all todos', function(done ){
+      let req = {method:'GET',url:'/deleteToDo',user:{userName:'sree',name:'sreenadh',password:"password"},headers:{cookie:'title=This is title'}}
+      request(app,req,res=>{
+        th.should_be_redirected_to(res,'/viewAll.html');
+        done();
+      })
+    });
+  });
 });
