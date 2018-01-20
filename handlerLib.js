@@ -1,6 +1,12 @@
 const fs = require('fs');
 const qs = require('querystring');
-const utils = require('./utils.js')
+const utils = require('./utils.js');
+const User = require('./lib/user.js');
+
+const _registeredUsers=[
+  {userName:'sree',name:'sreenadh',password:"password"},
+  {userName:'sreenu',name:'sreenu',password:"password"},
+  {userName:'sudhin',name:'sudhin',password:"password"}];
 
 const serve404=(req,res)=>{
   res.statusCode = 404;
@@ -43,11 +49,6 @@ const getSpeciicToDo=(req)=>{
 }
 
 const toS = o=>JSON.stringify(o,null,2);
-
-const _registeredUsers=[
-  {userName:'sree',name:'sreenadh',password:"password"},
-  {userName:'sreenu',name:'sreenu',password:"password"},
-  {userName:'sudhin',name:'sudhin',password:"password"}];
 
 const itemCreater=(newItem)=>{
   let itemObject={};
@@ -162,7 +163,6 @@ const serveHomePage=(req,res)=>{
   res.setHeader('Content-Type','text/html');
   res.statusCode = 200;
   homePage = homePage.replace('<userName></userName>',req.user['name']);
-  console.log(homePage);
   res.write(homePage);
   res.end();
 }
