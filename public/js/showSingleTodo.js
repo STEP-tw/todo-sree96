@@ -1,9 +1,8 @@
 const deleteItem = function(event) {
   let updateItemDisplay = function() {
-    document.getElementById(event.target.id).remove();
+    document.getElementById(event.target.parentNode.parentNode.id).remove();
   }
-
-  let itemDesc = event.target.id;
+  let itemDesc = event.target.parentNode.parentNode.id;
 
   let xmlReq = new XMLHttpRequest();
   xmlReq.addEventListener("load",updateItemDisplay)
@@ -15,12 +14,11 @@ const updateItemStatus = function(event) {
   let resListener=function () {
     return;
   }
-  let id=event.target.id;
-  let element=document.getElementById(id);
+  let id=event.target.parentNode.parentNode.id;
   var oReq = new XMLHttpRequest();
   oReq.addEventListener("click", resListener);
   oReq.open("POST", '/updateItemStatus');
-  oReq.send(`item=${id}&itemStatus=${element.checked}`);
+  oReq.send(`item=${id}&itemStatus=${event.target.checked}`);
 }
 
 const addEventListenerToButtons = function() {

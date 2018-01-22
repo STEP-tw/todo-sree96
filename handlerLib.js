@@ -162,7 +162,17 @@ const deleteItemAndGetUpdatedList = (req,res)=>{
 const updateItemStatus = (req,res)=>{
   let item = req.body.item;
   let checkedStatus = req.body.itemStatus;
-
+  let currUser = data[`${req.user.userName}`];
+  let currToDo = currUser.getToDo(`${req.cookies.currentToDo}`);
+  if(checkedStatus=="true") {
+    currUser.checkItemOf(currToDo.getTitle(),item);
+  }
+  else {
+    currUser.uncheckItemOf(currToDo.getTitle(),item);
+  }
+  let updatedItem = currToDo.getItemByDesc(item);
+  res.write(JSON.stringify(updatedItem))
+  res.end();
 }
 
 module.exports={

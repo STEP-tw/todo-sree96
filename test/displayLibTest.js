@@ -6,10 +6,10 @@ const Item = require('../lib/toDoItem.js');
 describe('toHtmlItemList', function(){
   it('should convert given item list to html format', function(){
     let item = new Item("Sleep");
-    let expected = `<li><input type='checkbox' id='Sleep'></input>Sleep<button id='Sleep'>Delete</button></li>`;
+    let expected = `<div id='Sleep'><li><input type='checkbox'></input>Sleep<button>Delete</button></li></div>`;
     assert.equal(lib.toItemList(item),expected)
     item.check();
-    expected = `<li><input type='checkbox' id='Sleep' checked></input>Sleep<button id='Sleep'>Delete</button></li>`;
+    expected = `<div id='Sleep'><li><input type='checkbox' checked></input>Sleep<button>Delete</button></li></div>`;
     assert.equal(lib.toItemList(item),expected)
   });
 
