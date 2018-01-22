@@ -23,5 +23,6 @@ app.post('/login',handlerLib.verifyLogin);
 app.post('/addNewItem',handlerLib.addNewItem);
 app.post('/edit',handlerLib.editTodo);
 app.post('/deleteItem',handlerLib.deleteItemAndGetUpdatedList);
+app.post('/updateItemStatus',handlerLib.updateItemStatus);
 
 module.exports=app;

@@ -123,9 +123,9 @@ describe('ToDo Module',()=>{
   });
 
   describe('mapItems', function(){
-    it('should run provided mapper function on all items', function(){
+    it('shoud run provided mapper function on all items', function(){
       let toHtmlItemList = function(item) {
-        return `<li id="${item}"><input type='checkbox'></input>${item}<button id="${item}">Delete</button></li>`;
+        return `<li id="${item.getDesc()}"><input type='checkbox'></input>${item.getDesc()}<button id="${item.getDesc()}">Delete</button></li>`;
       };
       let expected=`<li id="Item 1"><input type='checkbox'></input>Item 1<button id="Item 1">Delete</button></li><li id="Item 2"><input type='checkbox'></input>Item 2<button id="Item 2">Delete</button></li>`;
       let todo = new ToDo('My ToDo');
@@ -133,5 +133,7 @@ describe('ToDo Module',()=>{
       todo.addItem('Item 2');
       assert.deepEqual(todo.mapItems(toHtmlItemList),expected)
     });
+
   });
+
 })

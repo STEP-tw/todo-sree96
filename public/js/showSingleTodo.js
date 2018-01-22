@@ -11,7 +11,19 @@ const deleteItem = function(event) {
   xmlReq.send(`item=${itemDesc}`);
 }
 
-const addEventListenerToAllButtons = function() {
+const updateItemStatus = function(event) {
+  let resListener=function () {
+    return;
+  }
+  let id=event.target.id;
+  let element=document.getElementById(id);
+  var oReq = new XMLHttpRequest();
+  oReq.addEventListener("click", resListener);
+  oReq.open("POST", '/updateItemStatus');
+  oReq.send(`item=${id}&itemStatus=${element.checked}`);
+}
+
+const addEventListenerToButtons = function() {
   let allButtons = document.getElementsByTagName('button');
   let buttonIndexes = Object.keys(allButtons);
   buttonIndexes.forEach(function(buttonIndex){
@@ -20,4 +32,19 @@ const addEventListenerToAllButtons = function() {
   })
 }
 
-window.onload = addEventListenerToAllButtons;
+const addEventListenerToCheckboxes = function() {
+  let checkboxes = document.getElementById('allItems').querySelectorAll('input');
+  let checkboxIndexes = Object.keys(checkboxes);
+  checkboxIndexes.forEach(function(checkboxIndex){
+    let checkbox = checkboxes[`${checkboxIndex}`];
+    checkbox.onclick = updateItemStatus;
+  })
+}
+
+
+const addEventListeners = function() {
+  addEventListenerToButtons();
+  addEventListenerToCheckboxes();
+}
+
+window.onload = addEventListeners;

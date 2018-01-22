@@ -1,7 +1,6 @@
 let chai = require('chai');
 let assert = chai.assert;
 let request = require('./requestSimulator.js');
-process.env.COMMENT_STORE = "./test/testStore.json";
 process.env.sessionid = '1234';
 let app = require('../app.js');
 let th = require('./testHelper.js');
@@ -257,6 +256,43 @@ describe('/deleteItem', function(){
       th.body_does_not_contain(res,'Item1')
       done();
     })
+  });
+});
+
+describe('parse cookies', function(){
+  it('should return empty object for invalid cookies', function(){
+    let req = {method:'get', url:'/home.html', headers:{cookie:"jfd9jr9etji34;;98"}};
+    request(app,req,res=>{
+
+    })
+  });
+
+});
+
+
+describe('/updateItemStatus', function(){
+  let req = {method:'POST', url:'/addNewTodo', user:{userName:'pranavb',name:'pranavb',password:'password'}, body:'title=This is title',headers:{cookie:"sessionid=1234"}};
+  it('create new todo', function(done){
+    request(app,req,res=>{
+      th.should_be_redirected_to(res,'/home.html');
+      req['url']='/addNewItem';
+      req['method'] = "POST";
+      req['body'] = 'item=Item 1'
+      req.headers['cookie']='currentToDo = This is title';
+      done();
+    });
+  });
+  it('should add a newItem to a todo', function(done ){
+    request(app,req,res=>{
+      th.should_be_redirected_to(res,'/showSingleToDo');
+      req['url']='/showSingleToDo';
+      req['method']='GET'
+      req.headers['cookie']='currentToDo = This is title';
+      done();
+    })
+  });
+  it('shoud update the status of item', function(){
+
   });
 
 

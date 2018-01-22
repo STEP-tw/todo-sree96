@@ -8,6 +8,8 @@ const _registeredUsers=[{userName:'pranavb', name:'pranavb', password:'password'
 let data = {};
 let pranavb = new User('pranavb');
 data['pranavb'] = pranavb;
+let sree = new User('sree');
+data['sree'] = sree;
 
 
 const serve404=(req,res)=>{
@@ -59,7 +61,6 @@ const showSingleToDo=(req,res)=>{
 };
 
 const addNewTodo=(req,res)=>{
-  console.log(req.user);
   let userName=req.user.userName;
   let currUser = data[`${userName}`];
   let title = req.body.title;
@@ -158,6 +159,12 @@ const deleteItemAndGetUpdatedList = (req,res)=>{
   res.end();
 };
 
+const updateItemStatus = (req,res)=>{
+  let item = req.body.item;
+  let checkedStatus = req.body.itemStatus;
+
+}
+
 module.exports={
   deleteToDo,
   serveStaticPage,
@@ -172,5 +179,6 @@ module.exports={
   redirectLoggedOutUserToLogin,
   redirectLoggedInUserToHome,
   serveHomePage,
-  deleteItemAndGetUpdatedList
+  deleteItemAndGetUpdatedList,
+  updateItemStatus
 }
