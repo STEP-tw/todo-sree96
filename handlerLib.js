@@ -2,8 +2,8 @@ const fs = require('fs');
 const qs = require('querystring');
 const utils = require('./utils.js');
 const User = require('./lib/user.js');
-const _registeredUsers=[{userName:'sree',name:'sreenadh',password:"password"},
-  {userName:'pranavb',name:'pranavb',password:'password'}];
+const displayLib = require('./lib/displayLib.js');
+const _registeredUsers=[{userName:'pranavb', name:'pranavb', password:'password'}, {userName:'sree',name:'sreenadh',password:"password"}];
 
 let data = {};
 let pranavb = new User('pranavb');
@@ -16,27 +16,6 @@ const serve404=(req,res)=>{
   res.write(fs.readFileSync('./public/fileNotFound.html'));
   res.end();
   return ;
-};
-
-const getContentType=function (resourcePath) {
-  let splitedPath=resourcePath.split(".");
-  return splitedPath[splitedPath.length-1];
-};
-
-const setContentType=function (res,resourcePath) {
-  let contentTypes={
-    'html':"text/html",
-    'jpg':"image/jpeg",
-    'gif':"image/gif",
-    'css':"text/css",
-    'png':"image/png",
-    'ico':"icon/ico",
-    'pdf':"application/pdf",
-    'js':"text/javascript",
-  };
-  let extension=getContentType(resourcePath);
-  res.statusCode=200;
-  res.setHeader("Content-Type",contentTypes[extension]);
 };
 
 const toS = o=>JSON.stringify(o,null,2);
@@ -57,7 +36,6 @@ const serveStaticPage=function (req,res) {
   let resourcePath=`./public${req.url}`;
   try {
     let filecontent=fs.readFileSync(resourcePath);
-    setContentType(res,resourcePath);
     res.statusCode=200;
     res.write(filecontent);
     res.end();
@@ -74,12 +52,14 @@ const showSingleToDo=(req,res)=>{
   let toDoPage = fs.readFileSync('./public/showSingleToDo.html','utf8');
   toDoPage = toDoPage.replace('<toDoTitle></toDoTitle>',currToDo.getTitle());
   toDoPage = toDoPage.replace('<toDoDesc></toDoDesc>',currToDo.getDesc());
-  toDoPage = toDoPage.replace('<allItems></allItems>', currToDo.getAllItemsInHtmlList());
+  let itemList = `<ul>${currToDo.mapItems(displayLib.toItemList)}</ul>`;
+  toDoPage = toDoPage.replace('<allItems></allItems>',itemList);
   res.write(toDoPage);
   res.end();
 };
 
 const addNewTodo=(req,res)=>{
+  console.log(req.user);
   let userName=req.user.userName;
   let currUser = data[`${userName}`];
   let title = req.body.title;
@@ -118,10 +98,6 @@ const verifyLogin=(req,res)=>{
   let sessionid = process.env.sessionid ||new Date().getTime();
   res.setHeader('Set-Cookie',`sessionid=${sessionid}`);
   user.sessionid = sessionid;
-  // let sendingFilePath=`./public/js/todos.js`;
-  // let filePath=process.env.COMMENT_STORE||`./data/${user.userName}ToDos.json`;
-  // let currentContent=JSON.parse(fs.readFileSync(filePath,"utf-8"));
-  // fs.writeFileSync(sendingFilePath,`var todos=${toS(currentContent)}`);
   res.redirect('/home.html');
 };
 
@@ -137,10 +113,6 @@ const serveHomePage=(req,res)=>{
 }
 
 const serveLoginPage=(req,res)=>{
-  if (req.user) {
-    res.redirect('/home.html');
-    return;
-  }
   res.setHeader('Content-Type','text/html');
   res.write(`<h1>Login</h1>`);
   res.write(`<p>${req.cookies.message||""}</p>`);
