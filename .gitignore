@@ -6,3 +6,5 @@ data/
 res/
 .nyc_output/
 coverage/
+/test/mockSe*
+/lib/ses*

@@ -266,9 +266,7 @@ describe('parse cookies', function(){
 
     })
   });
-
 });
-
 
 describe('/updateItemStatus', function(){
   let req = {method:'POST', url:'/addNewTodo', user:{userName:'pranavb',name:'pranavb',password:'password'}, body:'title=This is title',headers:{cookie:"sessionid=1234"}};
