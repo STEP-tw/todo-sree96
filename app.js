@@ -4,8 +4,11 @@ let handlerLib = require('./handlerLib.js');
 
 let app=WebApp.create();
 
-
+app.getSessionId = function(){
+  return new Date().getTime();
+}
 app.fs = fs;
+
 
 app.use(handlerLib.logRequest.bind(app))
 app.use(handlerLib.loadUser);
@@ -20,7 +23,7 @@ app.get('/showSingleToDo',handlerLib.showSingleToDo.bind(app));
 app.get('/login.html',handlerLib.serveLoginPage.bind(app));
 app.get('/logout',handlerLib.logoutUser);
 app.post('/addNewTodo',handlerLib.addNewTodo);
-app.post('/login',handlerLib.verifyLogin);
+app.post('/login',handlerLib.verifyLogin.bind(app));
 app.post('/addNewItem',handlerLib.addNewItem);
 app.post('/edit',handlerLib.editTodo);
 app.post('/deleteItem',handlerLib.deleteItemAndGetUpdatedList);

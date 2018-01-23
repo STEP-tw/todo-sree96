@@ -72,7 +72,7 @@ const logRequest = function(req,res){
     `HEADERS=> ${toS(req.headers)}`,
     `COOKIES=> ${toS(req.cookies)}`,
     `BODY=> ${toS(req.body)}`,''].join('\n');
-  this.fs.appendFile('./request.log',text,()=>{});
+  this.fs.appendFileSync('./request.log',text);
 
   console.log(`${req.method} ${req.url}`);
 };
@@ -85,14 +85,14 @@ const loadUser = (req,res)=>{
   }
 };
 
-const verifyLogin=(req,res)=>{
+const verifyLogin=function(req,res){
   let user = _registeredUsers.find(u=>u.userName==req.body.userName&&u.password==req.body.password);
   if(!user) {
     res.setHeader('Set-Cookie',`message=Login Failed; Max-Age=5`);
     res.redirect('/login.html');
     return;
   }
-  let sessionid = process.env.sessionid ||new Date().getTime();
+  let sessionid = this.getSessionId();
   res.setHeader('Set-Cookie',`sessionid=${sessionid}`);
   user.sessionid = sessionid;
   res.redirect('/home.html');
@@ -178,6 +178,19 @@ const editTitle = (req,res)=>{
   }
   currUser.editTitleOf(currToDo.getTitle(),newTitle);
   res.setHeader('Set-Cookie',`currentToDo=${currToDo.getTitle()}`);
+  res.redirect('/showSingleToDo');
+}
+
+const editDesc = (req,res)=>{
+  let newDesc = req.body.newDesc;
+  let currUser = data[`${req.user.userName}`];
+  let currToDo = currUser.getToDo(`${req.cookies.currentToDo}`);
+  if (newDesc==currToDo.getDesc()) {
+    res.redirect('/showSingleToDo');
+    return ;
+  }
+  currUser.editDescOf(currToDo.getTitle(),newDesc);
+  // res.setHeader('Set-Cookie',`currentToDo=${currToDo.getTitle()}`);
   res.redirect('/showSingleToDo');
 }
 

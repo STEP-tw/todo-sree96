@@ -1,10 +1,11 @@
 let chai = require('chai');
 let assert = chai.assert;
 let request = require('./requestSimulator.js');
-process.env.sessionid = '1234';
 let app = require('../app.js');
 let th = require('./testHelper.js');
 let MockFileSystem = require('./mockFileSystem.js');
+let dummySessionIdGenerator = require('./mockSessionId.js')
+
 let dummyFs = new MockFileSystem();
 
 dummyFs.addFile('./public/fileNotFound.html','Requested File Not Found');
@@ -13,7 +14,6 @@ dummyFs.addFile('./public/showSingleToDo.html','This is title, Item1, Sleep')
 dummyFs.addFile('./request.log','');
 dummyFs.addFile('./public/home.html','This is HOME PAGE pranavb');
 dummyFs.addFile('./public/login.html','Login');
-
 
 app.fs = dummyFs;
 
@@ -81,11 +81,12 @@ describe('GET /login.html', function(){
 });
 
 describe('POST /login', function(){
-  it('redirects to home page for valid user',done=>{
+  it('redirects to home page for valid user with default cookie',done=>{
     request(app,{method:'POST',url:'/login',body:'userName=pranavb&password=password'},res=>{
       th.should_be_redirected_to(res,'/home.html');
       th.should_not_have_cookie(res,'message');
-      th.should_have_cookie(res,'sessionid','1234')
+      th.should_not_have_cookie(res,'1234');
+      app.getSessionId=dummySessionIdGenerator;
       done();
     })
   });
@@ -103,6 +104,17 @@ describe('POST /login', function(){
       th.body_contains(res,"Login Failed");
       done();
     });
+  });
+});
+
+describe('POST /login', function(){
+  it('redirects to home page for valid user with dummy sessionid',done=>{
+    request(app,{method:'POST',url:'/login',body:'userName=pranavb&password=password'},res=>{
+      th.should_be_redirected_to(res,'/home.html');
+      th.should_not_have_cookie(res,'message');
+      th.should_have_cookie(res,'sessionid','1234')
+      done();
+    })
   });
 });
 
@@ -340,7 +352,6 @@ describe('/editTitle', function(){
       done();
     });
   });
-
   it('should show a todo from all todos', function(done ){
     request(app,req,res=>{
       th.body_contains(res,'This is title');
@@ -388,4 +399,11 @@ describe('/editTitle', function(){
       done();
     });
   });
+});
+
+describe('/editDesc', function(){
+  it('', function(){
+
+  });
+
 });

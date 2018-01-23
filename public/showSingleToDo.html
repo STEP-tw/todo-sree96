@@ -16,9 +16,9 @@
         <a href="/deleteToDo">Delete</a>
         <p id="content">
           TITLE : <toDoTitle></toDoTitle>&nbsp&nbsp
-          <br>
+          <br><br>
           DESCRIPTION : <toDoDesc></toDoDesc>
-          <br>
+          <br><br>
           <div id="allItems">
             ITEMS : <allItems></allItems>
           </div>
@@ -33,7 +33,11 @@
       </div>
       <div id="right">
         <form id="editTitleForm" action="/editTitle" method="POST">
-          New Title:<input type="text" name="newTitle" id='title' required><br>
+          New Title:<input type="text" name="newTitle"required><br>
+          <input type="submit" value="SAVE CHANGES"></input>
+        </form><br><br>
+        <form id="editDescForm" action="/editDesc" method="POST">
+          New Description:<input type="text" name="newDesc" required><br>
           <input type="submit" value="SAVE CHANGES"></input>
         </form>
       </div>
