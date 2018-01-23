@@ -5,13 +5,14 @@ let handlerLib = require('./handlerLib.js');
 let app=WebApp.create();
 
 
+app.fs = fs;
+
 app.use(handlerLib.logRequest)
 app.use(handlerLib.loadUser);
 app.use(handlerLib.redirectLoggedInUserToHome);
 app.use(handlerLib.redirectLoggedOutUserToLogin);
 
 
-app.addPostprocess(handlerLib.serveStaticPage);
 
 app.get('/home.html',handlerLib.serveHomePage);
 app.get('/deleteToDo',handlerLib.deleteToDo);
@@ -24,5 +25,9 @@ app.post('/addNewItem',handlerLib.addNewItem);
 app.post('/edit',handlerLib.editTodo);
 app.post('/deleteItem',handlerLib.deleteItemAndGetUpdatedList);
 app.post('/updateItemStatus',handlerLib.updateItemStatus);
+
+
+
+app.addPostprocess(handlerLib.serveStaticPage);
 
 module.exports=app;

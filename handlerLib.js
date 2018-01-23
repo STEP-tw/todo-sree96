@@ -31,10 +31,6 @@ const deleteToDo=(req,res)=>{
 };
 
 const serveStaticPage=function (req,res) {
-  if (!req.user) {
-    res.redirect('/login.html')
-    return ;
-  }
   let resourcePath=`./public${req.url}`;
   try {
     let filecontent=fs.readFileSync(resourcePath);

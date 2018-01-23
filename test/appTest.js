@@ -9,7 +9,9 @@ let th = require('./testHelper.js');
 describe('GET /bad', function(){
   it('Should redirect to login page if not loggedin for /bad', function(done){
     request(app,{method:'GET',url:'/bad'},(res)=>{
-      th.should_be_redirected_to(res,'/login.html');
+      th.body_contains(res,"Requested File Not Found");
+      th.content_type_is(res,'text/html');
+      assert.equal(res.statusCode,404);
       done();
     });
   });
