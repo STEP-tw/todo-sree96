@@ -4,7 +4,18 @@ let request = require('./requestSimulator.js');
 process.env.sessionid = '1234';
 let app = require('../app.js');
 let th = require('./testHelper.js');
+let MockFileSystem = require('./mockFileSystem.js');
+let dummyFs = new MockFileSystem();
 
+dummyFs.addFile('./public/fileNotFound.html','Requested File Not Found');
+dummyFs.addFile('./public/js/home.js','addEventListenerToAllButtons');
+dummyFs.addFile('./public/showSingleToDo.html','This is title, Item1, Sleep')
+dummyFs.addFile('./request.log','');
+dummyFs.addFile('./public/home.html','This is HOME PAGE pranavb');
+dummyFs.addFile('./public/login.html','Login');
+
+
+app.fs = dummyFs;
 
 describe('GET /bad', function(){
   it('Should redirect to login page if not loggedin for /bad', function(done){
@@ -28,7 +39,7 @@ describe('GET /bad', function(){
 
 describe('GET /js/home.js', function(){
   let req={method:'GET',url:'/js/home.js',user:{userName:'sree',name:'sreenadh',password:"password"}};
-  it('should serve favicon', function(done){
+  it('should serve home.js', function(done){
     request(app,req,res=>{
       th.status_is_ok(res);
       th.body_contains(res,'addEventListenerToAllButtons');
@@ -36,7 +47,6 @@ describe('GET /js/home.js', function(){
     })
   });
 });
-
 
 describe('GET /', function(){
   it('Should redirect to login page if not loggedin', function(done){
@@ -86,17 +96,15 @@ describe('POST /login', function(){
       done();
     })
   });
-});
-
-it('Should serve the login page with message if cookie found', function(done){
-  request(app,{method:'GET',url:'/login.html',headers:{cookie:'message=Login Failed'}},(res)=>{
-    th.status_is_ok(res);
-    th.content_type_is(res,'text/html');
-    th.body_contains(res,"Login Failed");
-    done();
+  it('Should serve the login page with message if cookie found', function(done){
+    request(app,{method:'GET',url:'/login.html',headers:{cookie:'message=Login Failed'}},(res)=>{
+      th.status_is_ok(res);
+      th.content_type_is(res,'text/html');
+      th.body_contains(res,"Login Failed");
+      done();
+    });
   });
 });
-
 
 describe('GET /logout', function(){
   it('redirects to login page after logout',done=>{
@@ -107,6 +115,7 @@ describe('GET /logout', function(){
     })
   });
 });
+
 describe('GET /home.html', function(){
   it('serves to home page if loggedin',done=>{
     request(app,{method:'GET',url:'/home.html',user:{userName:'pranavb',name:'pranavb',password:'password'}},res=>{

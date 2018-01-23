@@ -12,10 +12,10 @@ let sree = new User('sree');
 data['sree'] = sree;
 
 
-const serve404=(req,res)=>{
+const serve404=function(req,res){
   res.statusCode = 404;
   res.setHeader('Content-Type','text/html');
-  res.write(fs.readFileSync('./public/fileNotFound.html'));
+  res.write(this.fs.readFileSync('./public/fileNotFound.html'));
   res.end();
   return ;
 };
@@ -33,21 +33,21 @@ const deleteToDo=(req,res)=>{
 const serveStaticPage=function (req,res) {
   let resourcePath=`./public${req.url}`;
   try {
-    let filecontent=fs.readFileSync(resourcePath);
+    let filecontent=this.fs.readFileSync(resourcePath);
     res.statusCode=200;
     res.write(filecontent);
     res.end();
     return ;
   } catch (e) {
-    serve404(req,res);
+    serve404.call(this,req,res);
     return;
   }
 };
 
-const showSingleToDo=(req,res)=>{
+const showSingleToDo=function(req,res){
   let currUser = data[`${req.user.userName}`];
   let currToDo = currUser.getToDo(`${req.cookies.currentToDo}`);
-  let toDoPage = fs.readFileSync('./public/showSingleToDo.html','utf8');
+  let toDoPage = this.fs.readFileSync('./public/showSingleToDo.html','utf8');
   toDoPage = toDoPage.replace('<toDoTitle></toDoTitle>',currToDo.getTitle());
   toDoPage = toDoPage.replace('<toDoDesc></toDoDesc>',currToDo.getDesc());
   let itemList = `<ul>${currToDo.mapItems(displayLib.toItemList)}</ul>`;
@@ -65,14 +65,14 @@ const addNewTodo=(req,res)=>{
   res.redirect('/home.html')
 };
 
-const logRequest = (req,res)=>{
+const logRequest = function(req,res){
   let text = ['------------------------------',
     `${utils.timeStamp()}`,
     `${req.method} ${req.url}`,
     `HEADERS=> ${toS(req.headers)}`,
     `COOKIES=> ${toS(req.cookies)}`,
     `BODY=> ${toS(req.body)}`,''].join('\n');
-  fs.appendFile('./request.log',text,()=>{});
+  this.fs.appendFile('./request.log',text,()=>{});
 
   console.log(`${req.method} ${req.url}`);
 };
@@ -98,8 +98,8 @@ const verifyLogin=(req,res)=>{
   res.redirect('/home.html');
 };
 
-const serveHomePage=(req,res)=>{
-  let homePage = fs.readFileSync('./public/home.html','utf8');
+const serveHomePage=function(req,res){
+  let homePage = this.fs.readFileSync('./public/home.html','utf8');
   let currUser = data[`${req.user.userName}`];
   res.setHeader('Content-Type','text/html');
   res.statusCode = 200;
@@ -109,17 +109,16 @@ const serveHomePage=(req,res)=>{
   res.end();
 }
 
-const serveLoginPage=(req,res)=>{
+const serveLoginPage=function(req,res){
   res.setHeader('Content-Type','text/html');
-  res.write(`<h1>Login</h1>`);
   res.write(`<p>${req.cookies.message||""}</p>`);
-  res.write(fs.readFileSync("./public/login.html"));
+  res.write(this.fs.readFileSync("./public/login.html"));
   res.end();
 };
 
 const logoutUser=(req,res)=>{
   res.setHeader('Set-Cookie',`sessionid=0`);
-  delete req.user.sessionid;  
+  delete req.user.sessionid;
   res.redirect('/login.html');
 };
 

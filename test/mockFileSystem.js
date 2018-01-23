@@ -13,6 +13,11 @@ class MockFileSystem {
       throw new Error('NOT FOUND');
     return this.files[`${fileName}`];
   }
+  appendFile(fileName,contents,callback) {
+    if (!this.existSync(fileName))
+      throw new Error('NOT FOUND');
+    this.files[fileName]+=contents;
+  }
 }
 
 

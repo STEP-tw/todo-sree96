@@ -16,4 +16,9 @@ describe('fs', function(){
     assert.equal(fs.readFileSync('index.html','utf8'),'This is index.html');
   });
 
+  it('appendFile', function(){
+    assert.equal(fs.readFileSync('index.html','utf8'),'This is index.html');
+    fs.appendFile('index.html',' added new text',()=>{});
+    assert.equal(fs.readFileSync('index.html','utf8'),'This is index.html added new text');
+  });
 });
