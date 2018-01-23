@@ -46,7 +46,7 @@ const serveStaticPage=function (req,res) {
 
 const showSingleToDo=(req,res)=>{
   let currUser = data[`${req.user.userName}`];
-  let currToDo = currUser.getToDo(`${req.cookies.currentToDo}`)
+  let currToDo = currUser.getToDo(`${req.cookies.currentToDo}`);
   let toDoPage = fs.readFileSync('./public/showSingleToDo.html','utf8');
   toDoPage = toDoPage.replace('<toDoTitle></toDoTitle>',currToDo.getTitle());
   toDoPage = toDoPage.replace('<toDoDesc></toDoDesc>',currToDo.getDesc());
@@ -119,9 +119,7 @@ const serveLoginPage=(req,res)=>{
 
 const logoutUser=(req,res)=>{
   res.setHeader('Set-Cookie',`sessionid=0`);
-  if (req.user) {
-    delete req.user.sessionid;
-  }
+  delete req.user.sessionid;  
   res.redirect('/login.html');
 };
 
@@ -171,6 +169,19 @@ const updateItemStatus = (req,res)=>{
   res.end();
 }
 
+const editTitle = (req,res)=>{
+  let newTitle = req.body.newTitle;
+  let currUser = data[`${req.user.userName}`];
+  let currToDo = currUser.getToDo(`${req.cookies.currentToDo}`);
+  if (newTitle==currToDo.getTitle()) {
+    res.redirect('/showSingleToDo');
+    return ;
+  }
+  currUser.editTitleOf(currToDo.getTitle(),newTitle);
+  res.setHeader('Set-Cookie',`currentToDo=${currToDo.getTitle()}`);
+  res.redirect('/showSingleToDo');
+}
+
 module.exports={
   deleteToDo,
   serveStaticPage,
@@ -186,5 +197,6 @@ module.exports={
   redirectLoggedInUserToHome,
   serveHomePage,
   deleteItemAndGetUpdatedList,
-  updateItemStatus
+  updateItemStatus,
+  editTitle
 }

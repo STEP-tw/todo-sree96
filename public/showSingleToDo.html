@@ -3,29 +3,41 @@
   <head>
     <meta charset="utf-8">
     <title>TO DO</title>
+    <link rel="stylesheet" href="/css/showSingleToDo.css">
     <script src="./js/markAsDoneOrUndone.js" charset="utf-8"></script>
     <script src="./js/showSingleToDo.js" charset="utf-8"></script>
   </head>
   <body>
-    <b id="userName"></b><br />
-    <a href="/logout">Logout</a>
-    <a href="/home.html">Home</a>
-    <a href="/deleteToDo">Delete</a>
-    <p id="content">
-      TITLE : <toDoTitle></toDoTitle>
-      <br>
-      DESCRIPTION : <toDoDesc></toDoDesc>
-      <br>
-      <div id="allItems">
-        ITEMS : <allItems></allItems>
+    <div class="container">
+      <div id="left">
+        <b id="userName"></b><br />
+        <a href="/logout">Logout</a>
+        <a href="/home.html">Home</a>
+        <a href="/deleteToDo">Delete</a>
+        <p id="content">
+          TITLE : <toDoTitle></toDoTitle>&nbsp&nbsp
+          <br>
+          DESCRIPTION : <toDoDesc></toDoDesc>
+          <br>
+          <div id="allItems">
+            ITEMS : <allItems></allItems>
+          </div>
+          <br>
+        </p>
+        <br>
+        <br>
+        <form action="/addNewItem" method="POST">
+          Item: <input type="text" name="item" required><br/>
+          <input type="submit" value="Add Item"></input>
+        </form>
       </div>
-      <br>
-    </p>
-    <br>
-    <br>
-    <form action="/addNewItem" method="POST">
-      Item: <input type="text" name="item" required><br/>
-      <input type="submit" value="Add Item"></button>
-    </form>
+      <div id="right">
+        <form id="editTitleForm" action="/editTitle" method="POST">
+          New Title:<input type="text" name="newTitle" id='title' required><br>
+          <input type="submit" value="SAVE CHANGES"></input>
+        </form>
+      </div>
+    </div>
+
   </body>
 </html>

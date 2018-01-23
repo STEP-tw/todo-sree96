@@ -1,0 +1,16 @@
+.container{
+  width:100%;
+  height: auto;
+}
+
+#left{
+  width: 60%;
+  height: auto;
+  float: left;
+}
+
+#right{
+  width: 40%;
+  height: auto;
+  float: left;
+}

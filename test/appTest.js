@@ -304,7 +304,6 @@ describe('/updateItemStatus', function(){
   });
   it('shoud update the status of item', function(done){
     request(app,req,res=>{
-      console.log(res);
       th.body_contains(res,`{"desc":"Item1","checkedValue":true}`);
       req['url']='/updateItemStatus';
       req['method']='POST';
@@ -318,5 +317,66 @@ describe('/updateItemStatus', function(){
       th.body_contains(res,`{"desc":"Item1","checkedValue":false}`);
       done();
     })
+  });
+});
+
+describe('/editTitle', function(){
+  let req = {method:'POST', url:'/addNewTodo', user:{userName:'pranavb',name:'pranavb',password:'password'}, body:'title=This is title',headers:{cookie:"sessionid=1234"}};
+  it('create new todo', function(done){
+    request(app,req,res=>{
+      th.should_be_redirected_to(res,'/home.html');
+      req['url']='/showSingleToDo';
+      req['method'] = "GET";
+      req.headers['cookie']='currentToDo = This is title';
+      done();
+    });
+  });
+
+  it('should show a todo from all todos', function(done ){
+    request(app,req,res=>{
+      th.body_contains(res,'This is title');
+      th.status_is_ok(res);
+      req['url']='/editTitle';
+      req['method']='POST';
+      req['body']='newTitle=Sleep';
+      req.headers['cookie']='currentToDo = This is title';
+      done();
+    })
+  });
+  it('should edit the current title of todo', function(done){
+    request(app,req,res=>{
+      th.should_be_redirected_to(res,'/showSingleToDo');
+      req['url']='/showSingleToDo';
+      req['method'] = "GET";
+      req.headers['cookie']='currentToDo = Sleep';
+      done();
+    })
+  });
+  it('should show a todo from all todos', function(done ){
+    request(app,req,res=>{
+      th.body_contains(res,'Sleep');
+      th.status_is_ok(res);
+      req['url']='/editTitle';
+      req['method']='POST';
+      req['body']='newTitle=Sleep';
+      req.headers['cookie']='currentToDo = Sleep';
+      done();
+    })
+  });
+  it('should edit the current title of todo', function(done){
+    request(app,req,res=>{
+      th.should_be_redirected_to(res,'/showSingleToDo');
+      req['url']='/showSingleToDo';
+      req['method'] = "GET";
+      req.headers['cookie']='currentToDo = Sleep';
+      done();
+    })
+  });
+  it('should show a todo from all todos', function(done ){
+    request(app,req,res=>{
+      th.body_contains(res,'Sleep');
+      th.status_is_ok(res);
+      done();
+    });
   });
 });
