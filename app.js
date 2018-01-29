@@ -1,37 +1,60 @@
 const fs = require('fs');
-const WebApp = require('./webapp');
+const express = require('express');
 let handlerLib = require('./handlerLib.js');
+const parser = express.urlencoded({
+  extended : false,
+  type : req=>true
+})
 
-let app=WebApp.create();
+const toKeyValue = kv=>{
+    let parts = kv.split('=');
+    return {key:parts[0].trim(),value:parts[1].trim()};
+};
 
-app.getSessionId = function(){
+const accumulate = (o,kv)=> {
+  o[kv.key] = kv.value;
+  return o;
+};
+
+const parseCookies = text=> {
+  try {
+    return text && text.split(';').map(toKeyValue).reduce(accumulate,{}) || {};
+  }catch(e){
+    return {};
+  }
+}
+
+const cookieParser=function (req,res,next) {
+  req.cookies=parseCookies(req.headers.cookie||'');
+  next();
+}
+
+let app=express();
+
+app.sessionidGenerator = function(){
   return new Date().getTime();
 }
 app.fs = fs;
 
-
-app.use(handlerLib.logRequest.bind(app))
+app.use(parser);
+app.use(cookieParser);
 app.use(handlerLib.loadUser);
-app.use(handlerLib.redirectLoggedInUserToHome);
 app.use(handlerLib.redirectLoggedOutUserToLogin);
+app.use(handlerLib.redirectLoggedInUserToHome);
+app.use(express.static('public'));
+app.use(handlerLib.logRequest.bind(app));
 
-
-
-app.get('/home.html',handlerLib.serveHomePage.bind(app));
+app.get('/homePage',handlerLib.serveHomePage.bind(app));
 app.get('/deleteToDo',handlerLib.deleteToDo);
 app.get('/showSingleToDo',handlerLib.showSingleToDo.bind(app));
-app.get('/login.html',handlerLib.serveLoginPage.bind(app));
+app.get('/loginPage',handlerLib.serveLoginPage.bind(app));
 app.get('/logout',handlerLib.logoutUser);
 app.post('/addNewTodo',handlerLib.addNewTodo);
 app.post('/login',handlerLib.verifyLogin.bind(app));
 app.post('/addNewItem',handlerLib.addNewItem);
-app.post('/edit',handlerLib.editTodo);
 app.post('/deleteItem',handlerLib.deleteItemAndGetUpdatedList);
 app.post('/updateItemStatus',handlerLib.updateItemStatus);
 app.post('/editTitle',handlerLib.editTitle);
 
-
-
-app.addPostprocess(handlerLib.serveStaticPage.bind(app));
 
 module.exports=app;

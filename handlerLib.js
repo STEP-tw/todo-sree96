@@ -12,14 +12,6 @@ let sree = new User('sree');
 data['sree'] = sree;
 
 
-const serve404=function(req,res){
-  res.statusCode = 404;
-  res.setHeader('Content-Type','text/html');
-  res.write(this.fs.readFileSync('./public/fileNotFound.html'));
-  res.end();
-  return ;
-};
-
 const toS = o=>JSON.stringify(o,null,2);
 
 //==========================================================================
@@ -27,21 +19,7 @@ const toS = o=>JSON.stringify(o,null,2);
 const deleteToDo=(req,res)=>{
   let currUser = data[`${req.user.userName}`];
   currUser.deleteToDo(`${req.cookies.currentToDo}`)
-  res.redirect('/home.html')
-};
-
-const serveStaticPage=function (req,res) {
-  let resourcePath=`./public${req.url}`;
-  try {
-    let filecontent=this.fs.readFileSync(resourcePath);
-    res.statusCode=200;
-    res.write(filecontent);
-    res.end();
-    return ;
-  } catch (e) {
-    serve404.call(this,req,res);
-    return;
-  }
+  res.redirect('/homePage')
 };
 
 const showSingleToDo=function(req,res){
@@ -52,7 +30,7 @@ const showSingleToDo=function(req,res){
   toDoPage = toDoPage.replace('<toDoDesc></toDoDesc>',currToDo.getDesc());
   let itemList = `<ul>${currToDo.mapItems(displayLib.toItemList)}</ul>`;
   toDoPage = toDoPage.replace('<allItems></allItems>',itemList);
-  res.write(toDoPage);
+  res.send(toDoPage);
   res.end();
 };
 
@@ -62,10 +40,10 @@ const addNewTodo=(req,res)=>{
   let title = req.body.title;
   let description = req.body.description;
   currUser.addToDo(title,description);
-  res.redirect('/home.html')
+  res.redirect('/homePage')
 };
 
-const logRequest = function(req,res){
+const logRequest = function(req,res,next){
   let text = ['------------------------------',
     `${utils.timeStamp()}`,
     `${req.method} ${req.url}`,
@@ -73,29 +51,30 @@ const logRequest = function(req,res){
     `COOKIES=> ${toS(req.cookies)}`,
     `BODY=> ${toS(req.body)}`,''].join('\n');
   this.fs.appendFileSync('./request.log',text);
-
   console.log(`${req.method} ${req.url}`);
+  next();
 };
 
-const loadUser = (req,res)=>{
+const loadUser = (req,res,next)=>{
   let sessionid = req.cookies.sessionid;
   let user = _registeredUsers.find(u=>u.sessionid==sessionid);
   if(sessionid && user){
     req.user = user;
   }
+  next();
 };
 
 const verifyLogin=function(req,res){
   let user = _registeredUsers.find(u=>u.userName==req.body.userName&&u.password==req.body.password);
   if(!user) {
     res.setHeader('Set-Cookie',`message=Login Failed; Max-Age=5`);
-    res.redirect('/login.html');
+    res.redirect('/loginPage');
     return;
   }
-  let sessionid = this.getSessionId();
-  res.setHeader('Set-Cookie',`sessionid=${sessionid}`);
+  let sessionid = this.sessionidGenerator();
+  res.cookie(`sessionid`,`${sessionid}`);
   user.sessionid = sessionid;
-  res.redirect('/home.html');
+  res.redirect('/homePage');
 };
 
 const serveHomePage=function(req,res){
@@ -105,21 +84,20 @@ const serveHomePage=function(req,res){
   res.statusCode = 200;
   homePage = homePage.replace('<userName></userName>',req.user['name']);
   homePage = homePage.replace('<allToDoTitles></allToDoTitles>',currUser.getToDoTitlesInHtmlList('/showSingleToDo'));
-  res.write(homePage);
+  res.send(homePage);
   res.end();
 }
 
 const serveLoginPage=function(req,res){
+  let message=req.cookies.message||''
   res.setHeader('Content-Type','text/html');
-  res.write(`<p>${req.cookies.message||""}</p>`);
-  res.write(this.fs.readFileSync("./public/login.html"));
-  res.end();
+  res.send(`${message}${this.fs.readFileSync("./public/login.html")}`);
 };
 
 const logoutUser=(req,res)=>{
-  res.setHeader('Set-Cookie',`sessionid=0`);
+  res.cookie(`sessionid`,`0`);
   delete req.user.sessionid;
-  res.redirect('/login.html');
+  res.redirect('/loginPage');
 };
 
 const addNewItem=(req,res)=>{
@@ -129,16 +107,21 @@ const addNewItem=(req,res)=>{
   res.redirect('/showSingleToDo');
 };
 
-const redirectLoggedInUserToHome = (req,res)=>{
-  if(req.urlIsOneOf(['/','/login.html']) && req.user) {
-    res.redirect('/home.html');
+const redirectLoggedInUserToHome = (req,res,next)=>{
+  if(['/','/loginPage'].includes(req.url)&& req.user) {
+    res.redirect('/homePage');
+  } else {
+    next();
   }
 };
 
-const redirectLoggedOutUserToLogin = (req,res)=>{
-  let urlAllowedForOnlyLoggedIn = ['/', '/addNewTodo.html', '/addToToDoList.html', '/editAll.html', '/home.html', 'showSingleToDo.html', '/viewAll.html', '/deleteToDo', '/showSingleToDo', '/addNewTodo', '/addNewItem', '/edit'];
-  if(req.urlIsOneOf(urlAllowedForOnlyLoggedIn) && !req.user) {
-    res.redirect('/login.html');
+const redirectLoggedOutUserToLogin = (req,res,next)=>{
+  let urlAllowedForOnlyLoggedIn = ['/','/homePage', '/showSingleToDo.html', , '/deleteToDo', '/showSingleToDo', '/addNewTodo', '/addNewItem', '/edit'];
+  if(urlAllowedForOnlyLoggedIn.includes(req.url)&& !req.user) {
+    res.redirect('/loginPage');
+  }
+  else {
+    next();
   }
 };
 
@@ -148,7 +131,7 @@ const deleteItemAndGetUpdatedList = (req,res)=>{
   currUser.deleteItemOf(currentToDo,req.body['item']);
   currTodo = currUser.getToDo(currentToDo);
   updatedItemList = currTodo.getItemsDescInList();
-  res.write(JSON.stringify(updatedItemList));
+  res.send(JSON.stringify(updatedItemList));
   res.end();
 };
 
@@ -164,7 +147,7 @@ const updateItemStatus = (req,res)=>{
     currUser.uncheckItemOf(currToDo.getTitle(),item);
   }
   let updatedItem = currToDo.getItemByDesc(item);
-  res.write(JSON.stringify(updatedItem))
+  res.send(JSON.stringify(updatedItem))
   res.end();
 }
 
@@ -196,7 +179,6 @@ const editDesc = (req,res)=>{
 
 module.exports={
   deleteToDo,
-  serveStaticPage,
   showSingleToDo,
   addNewTodo,
   logRequest,

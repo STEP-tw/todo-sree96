@@ -11,12 +11,17 @@
     "start": "node server.js"
   },
   "dependencies": {
-    "chai" : "*"
+    "chai": "*",
+    "cookie-parser": "^1.4.3",
+    "express": "*"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/STEP-tw/todo-sree96/issues"
   },
-  "homepage": "https://github.com/STEP-tw/todo-sree96#readme"
+  "homepage": "https://github.com/STEP-tw/todo-sree96#readme",
+  "devDependencies": {
+    "supertest": "^3.0.0"
+  }
 }
