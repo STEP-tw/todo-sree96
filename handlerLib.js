@@ -136,7 +136,7 @@ const deleteItemAndGetUpdatedList = (req,res)=>{
 };
 
 const updateItemStatus = (req,res)=>{
-  debugger;
+  // debugger;
   let item = req.body.item;
   let checkedStatus = req.body.itemStatus;
   let currUser = data[`${req.user.userName}`];
@@ -174,7 +174,6 @@ const editDesc = (req,res)=>{
     return ;
   }
   currUser.editDescOf(currToDo.getTitle(),newDesc);
-  // res.setHeader('Set-Cookie',`currentToDo=${currToDo.getTitle()}`);
   res.redirect('/showSingleToDo');
 }
 
@@ -193,5 +192,6 @@ module.exports={
   serveHomePage,
   deleteItemAndGetUpdatedList,
   updateItemStatus,
-  editTitle
+  editTitle,
+  editDesc
 }

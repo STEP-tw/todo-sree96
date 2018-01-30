@@ -55,6 +55,7 @@ app.post('/addNewItem',handlerLib.addNewItem);
 app.post('/deleteItem',handlerLib.deleteItemAndGetUpdatedList);
 app.post('/updateItemStatus',handlerLib.updateItemStatus);
 app.post('/editTitle',handlerLib.editTitle);
+app.post('/editDesc',handlerLib.editDesc);
 
 
 module.exports=app;
