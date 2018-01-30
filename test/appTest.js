@@ -12,7 +12,7 @@ let dummyFs = new MockFileSystem();
 
 dummyFs.addFile('./public/fileNotFound.html','Requested File Not Found');
 dummyFs.addFile('./public/js/home.js','addEventListenerToAllButtons');
-dummyFs.addFile('./public/showSingleToDo.html','This is title, Item1, Sleep')
+dummyFs.addFile('./public/showSingleToDo.html','This is title, Item1, Sleep,desc,This is desc')
 dummyFs.addFile('./request.log','');
 dummyFs.addFile('./public/home.html','This is HOME PAGE pranavb');
 dummyFs.addFile('./public/login.html','Login');
@@ -240,7 +240,7 @@ describe('Testing for features available for loggedin users', function(){
       .end(()=>{
         request(app)
           .post('/addNewTodo')
-          .send('title=This is title')
+          .send('title=This is title&description=desc')
           .set('cookie','sessionid=1234')
           .end(()=>{
             request(app)
@@ -362,6 +362,37 @@ describe('Testing for features available for loggedin users', function(){
             .get('/showSingleToDo')
             .set('Cookie','currentToDo = This is title;sessionid=1234')
             .expect(/Sleep/)
+            .expect(200)
+            .end(done)
+        })
+    });
+  });
+
+  describe('/editDesc', function(){
+    it('should edit the description of current todo', function(done){
+      request(app)
+        .post('/editDesc')
+        .set('Cookie','currentToDo = This is title;sessionid=1234')
+        .send('newDesc=This is desc')
+        .end(()=>{
+          request(app)
+            .get('/showSingleToDo')
+            .set('Cookie','currentToDo = This is title;sessionid=1234')
+            .expect(/This is desc/)
+            .expect(200)
+            .end(done)
+        })
+    });
+    it('should edit the description of current todo if same description is given', function(done){
+      request(app)
+        .post('/editDesc')
+        .set('Cookie','currentToDo = This is title;sessionid=1234')
+        .send('newDesc=desc')
+        .end(()=>{
+          request(app)
+            .get('/showSingleToDo')
+            .set('Cookie','currentToDo = This is title;sessionid=1234')
+            .expect(/desc/)
             .expect(200)
             .end(done)
         })
