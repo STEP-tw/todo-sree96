@@ -1,6 +1,8 @@
 const fs = require('fs');
 const express = require('express');
-let handlerLib = require('./handlerLib.js');
+const handlerLib = require('./handlerLib.js');
+const sessionidGenerator = require('./utils').sessionidGenerator;
+
 const parser = express.urlencoded({
   extended : false,
   type : req=>true
@@ -31,18 +33,16 @@ const cookieParser=function (req,res,next) {
 
 let app=express();
 
-app.sessionidGenerator = function(){
-  return new Date().getTime();
-}
+app.sessionidGenerator = sessionidGenerator;
 app.fs = fs;
 
 app.use(parser);
 app.use(cookieParser);
+app.use(handlerLib.logRequest.bind(app));
 app.use(handlerLib.loadUser);
 app.use(handlerLib.redirectLoggedOutUserToLogin);
 app.use(handlerLib.redirectLoggedInUserToHome);
 app.use(express.static('public'));
-app.use(handlerLib.logRequest.bind(app));
 
 app.get('/homePage',handlerLib.serveHomePage.bind(app));
 app.get('/deleteToDo',handlerLib.deleteToDo);

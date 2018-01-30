@@ -136,6 +136,7 @@ const deleteItemAndGetUpdatedList = (req,res)=>{
 };
 
 const updateItemStatus = (req,res)=>{
+  debugger;
   let item = req.body.item;
   let checkedStatus = req.body.itemStatus;
   let currUser = data[`${req.user.userName}`];

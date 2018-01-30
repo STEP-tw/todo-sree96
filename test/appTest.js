@@ -2,6 +2,7 @@ let chai = require('chai');
 let assert = chai.assert;
 let request = require('supertest');
 let app = require('../app.js');
+let realApp = require('../app.js');
 let th = require('./testHelper.js');
 let sth = require('./supertestHelper.js');
 let MockFileSystem = require('./mockFileSystem.js');
@@ -17,6 +18,7 @@ dummyFs.addFile('./public/home.html','This is HOME PAGE pranavb');
 dummyFs.addFile('./public/login.html','Login');
 
 app.fs = dummyFs;
+
 app.sessionidGenerator=dummySessionIdGenerator;
 
 describe('GET /bad', function(){
@@ -144,7 +146,14 @@ describe('GET /logout', function(){
       .expect((res)=>{sth.should_have_cookie(res,'sessionid=1234')})
       .expect(302)
       .expect('Location','/homePage')
-      .end(done);
+      .end(()=>{
+        request(app)
+          .get('/logout')
+          .set('cookie','sessionid=1234')
+          .expect(302)
+          .expect('Location','/loginPage')
+          .end(done);
+      });
   });
 });
 
@@ -233,9 +242,16 @@ describe('Testing for features available for loggedin users', function(){
           .post('/addNewTodo')
           .send('title=This is title')
           .set('cookie','sessionid=1234')
-          .end(done)
-    });
+          .end(()=>{
+            request(app)
+              .post('/addNewItem')
+              .set('cookie','sessionid=1234;currentToDo=This is title')
+              .send('item=Item1')
+              .end(done)
+          })
+      })
   });
+
   describe('/addNewItem', function(){
     it('adding newitem into an existing todo', function(done){
       request(app)
@@ -270,169 +286,85 @@ describe('Testing for features available for loggedin users', function(){
     });
   });
 
-  describe.skip('/deleteItem', function(){
-    let req = {method:'POST', url:'/addNewTodo', user:{userName:'pranavb',name:'pranavb',password:'password'}, body:'title=This is title',headers:{cookie:"sessionid=1234"}};
-    it('create new todo', function(done){
-      request(app,req,res=>{
-        th.should_be_redirected_to(res,'/home.html');
-        req['url']='/showSingleToDo';
-        req['method'] = "GET";
-        req.headers['cookie']='currentToDo = This is title';
-        done();
-      });
-    });
+  describe('/deleteItem', function(){
     it('should show a todo from all todos', function(done ){
-      request(app,req,res=>{
-        th.body_contains(res,'This is title');
-        th.status_is_ok(res);
-        req['url']='/addNewItem';
-        req['method']='POST';
-        req['body']='item=Item1';
-        done();
-      })
-    });
-    it('should add a newItem to a todo', function(done ){
-      request(app,req,res=>{
-        th.should_be_redirected_to(res,'/showSingleToDo');
-        req['url']='/showSingleToDo';
-        req['method']='GET'
-        req.headers['cookie']='currentToDo = This is title';
-        done();
-      })
-    });
-    it('should show the newly added item', function(done){
-      request(app,req,res=>{
-        th.body_contains(res,'Item1')
-      })
-      req['url']='/deleteItem';
-      req['method']="POST"
-      req['body']="item=Item1";
-      done();
-    });
-    it('should delete item from ToDo', function(done){
-      request(app,req,res=>{
-        th.body_does_not_contain(res,'Item1')
-        done();
-      })
+      request(app)
+        .post('/addNewItem')
+        .set('cookie','sessionid=1234;currentToDo=This is title')
+        .send('item=Item1')
+        .end(()=>{
+          request(app)
+            .post('/deleteItem')
+            .set('cookie','sessionid=1234;currentToDo=This is title')
+            .send('item=Item2')
+            .end(()=>{
+              request(app)
+                .get('/showSingleToDo')
+                .set('cookie','sessionid=1234;currentToDo=This is title')
+                .expect(200)
+                .expect((res)=>{sth.body_does_not_contain(res,"Item2")})
+                .end(done)
+            })
+        })
     });
   });
 
-  describe.skip('parse cookies', function(){
-    it('should return empty object for invalid cookies', function(){
-      let req = {method:'get', url:'/home.html', headers:{cookie:"jfd9jr9etji34;;98"}};
-      request(app,req,res=>{
-
-      })
+  describe('parse cookies', function(){
+    it('should return empty object for invalid cookies', function(done){
+      request(app)
+        .get('/homePage')
+        .set("cookie","gdgdgcgc;;;dbdg;")
+        .expect((res)=>{console.log(res.cookies);})
+        .end(done)
     });
   });
 
-  describe.skip('/updateItemStatus', function(){
-    let req = {method:'POST', url:'/addNewTodo', user:{userName:'pranavb',name:'pranavb',password:'password'}, body:'title=This is title',headers:{cookie:"sessionid=1234"}};
-    it('create new todo', function(done){
-      request(app,req,res=>{
-        th.should_be_redirected_to(res,'/home.html');
-        req['url']='/showSingleToDo';
-        req['method'] = "GET";
-        req.headers['cookie']='currentToDo = This is title';
-        done();
-      });
-    });
-    it('should show a todo from all todos', function(done ){
-      request(app,req,res=>{
-        th.body_contains(res,'This is title');
-        th.status_is_ok(res);
-        req['url']='/addNewItem';
-        req['method']='POST';
-        req['body']='item=Item1';
-        req.headers['cookie']='currentToDo = This is title';
-        done();
-      })
-    });
-    it('should add a newItem to a todo', function(done ){
-      request(app,req,res=>{
-        th.should_be_redirected_to(res,'/showSingleToDo');
-        req['url']='/updateItemStatus';
-        req['method']='POST';
-        req.headers['cookie']='currentToDo = This is title';
-        req['body'] = 'item=Item1&itemStatus=true';
-        done();
-      })
-    });
-    it('shoud update the status of item', function(done){
-      request(app,req,res=>{
-        th.body_contains(res,`{"desc":"Item1","checkedValue":true}`);
-        req['url']='/updateItemStatus';
-        req['method']='POST';
-        req.headers['cookie']='currentToDo = This is title';
-        req['body'] = 'item=Item1&itemStatus=false'
-        done();
-      })
-    });
-    it('shoud update the status of item', function(done){
-      request(app,req,res=>{
-        th.body_contains(res,`{"desc":"Item1","checkedValue":false}`);
-        done();
-      })
-    });
+  describe('/updateItemStatus', function(){
+    it('should edit item status', function(done ){
+      request(app)
+        .post('/updateItemStatus')
+        .set('Cookie','currentToDo = This is title;sessionid=1234')
+        .send('item=Item1&itemStatus=true')
+        .expect(/{"desc":"Item1","checkedValue":true}/)
+        .end(()=>{
+          request(app)
+            .post('/updateItemStatus')
+            .set('Cookie','currentToDo = This is title;sessionid=1234')
+            .send('item=Item1&itemStatus=false')
+            .expect(/{"desc":"Item1","checkedValue":false}/)
+            .end(done);
+        })
+    })
   });
 
-  describe.skip('/editTitle', function(){
-    let req = {method:'POST', url:'/addNewTodo', user:{userName:'pranavb',name:'pranavb',password:'password'}, body:'title=This is title',headers:{cookie:"sessionid=1234"}};
-    it('create new todo', function(done){
-      request(app,req,res=>{
-        th.should_be_redirected_to(res,'/home.html');
-        req['url']='/showSingleToDo';
-        req['method'] = "GET";
-        req.headers['cookie']='currentToDo = This is title';
-        done();
-      });
-    });
-    it('should show a todo from all todos', function(done ){
-      request(app,req,res=>{
-        th.body_contains(res,'This is title');
-        th.status_is_ok(res);
-        req['url']='/editTitle';
-        req['method']='POST';
-        req['body']='newTitle=Sleep';
-        req.headers['cookie']='currentToDo = This is title';
-        done();
-      })
-    });
+  describe('/editTitle', function(){
     it('should edit the current title of todo', function(done){
-      request(app,req,res=>{
-        th.should_be_redirected_to(res,'/showSingleToDo');
-        req['url']='/showSingleToDo';
-        req['method'] = "GET";
-        req.headers['cookie']='currentToDo = Sleep';
-        done();
-      })
+      request(app)
+        .post('/editTitle')
+        .set('Cookie','currentToDo = This is title;sessionid=1234')
+        .send('newTitle=Sleep')
+        .end(()=>{
+          request(app)
+            .get('/showSingleToDo')
+            .set('Cookie','currentToDo = Sleep;sessionid=1234')
+            .expect(/Sleep/)
+            .expect(200)
+            .end(done)
+        })
     });
-    it('should show a todo from all todos', function(done ){
-      request(app,req,res=>{
-        th.body_contains(res,'Sleep');
-        th.status_is_ok(res);
-        req['url']='/editTitle';
-        req['method']='POST';
-        req['body']='newTitle=Sleep';
-        req.headers['cookie']='currentToDo = Sleep';
-        done();
-      })
-    });
-    it('should edit the current title of todo', function(done){
-      request(app,req,res=>{
-        th.should_be_redirected_to(res,'/showSingleToDo');
-        req['url']='/showSingleToDo';
-        req['method'] = "GET";
-        req.headers['cookie']='currentToDo = Sleep';
-        done();
-      })
-    });
-    it('should show a todo from all todos', function(done ){
-      request(app,req,res=>{
-        th.body_contains(res,'Sleep');
-        th.status_is_ok(res);
-        done();
-      });
+    it('should edit the current title of todo if same title is given', function(done){
+      request(app)
+        .post('/editTitle')
+        .set('Cookie','currentToDo = This is title;sessionid=1234')
+        .send('newTitle=This is title')
+        .end(()=>{
+          request(app)
+            .get('/showSingleToDo')
+            .set('Cookie','currentToDo = This is title;sessionid=1234')
+            .expect(/Sleep/)
+            .expect(200)
+            .end(done)
+        })
     });
   });
 });

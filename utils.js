@@ -3,7 +3,11 @@ const timeStamp = ()=>{
   return `${t.toDateString()} ${t.toLocaleTimeString()}`;
 }
 
+const sessionidGenerator = function(){
+  return new Date().getTime();
+}
 
 module.exports = {
-  timeStamp
+  timeStamp,
+  sessionidGenerator
 }
