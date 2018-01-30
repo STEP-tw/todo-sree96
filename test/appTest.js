@@ -10,11 +10,10 @@ let dummySessionIdGenerator = require('./mockSessionId.js')
 
 let dummyFs = new MockFileSystem();
 
-dummyFs.addFile('./public/fileNotFound.html','Requested File Not Found');
 dummyFs.addFile('./public/js/home.js','addEventListenerToAllButtons');
-dummyFs.addFile('./public/showSingleToDo.html','This is title, Item1, Sleep,desc,This is desc')
+dummyFs.addFile('./public/showSingleToDo.html','<allItems></allItems><toDoDesc></toDoDesc><toDoTitle></toDoTitle>')
 dummyFs.addFile('./request.log','');
-dummyFs.addFile('./public/home.html','This is HOME PAGE pranavb');
+dummyFs.addFile('./public/home.html','This is HOME PAGE <allToDoTitles></allToDoTitles> <userName></userName>');
 dummyFs.addFile('./public/login.html','Login');
 
 app.fs = dummyFs;
@@ -168,6 +167,7 @@ describe('GET /homePage', function(){
           .set('cookie','sessionid=1234')
           .expect(200)
           .expect(/HOME/)
+          .expect(/pranavb/)
           .end(done);
     });
   });
@@ -205,16 +205,6 @@ describe('/showSingleToDo', function(){
       .send('userName=pranavb&password=password')
       .end(done);
   });
-
-  it('create new todo', function(done){
-    request(app)
-      .post('/addNewTodo')
-      .set('cookie','sessionid=1234')
-      .send('title=This is title&description=nice')
-      .expect(302)
-      .expect('Location','/homePage')
-      .end(done)
-  });
   it('should show a todo from all todos', function(done ){
     request(app)
       .post('/addNewTodo')
@@ -226,6 +216,7 @@ describe('/showSingleToDo', function(){
         request(app)
           .get('/showSingleToDo')
           .set('cookie','sessionid=1234;currentToDo=This is title')
+          .expect(200)
           .expect(/This is title/)
           .end(done)
       })
@@ -314,7 +305,7 @@ describe('Testing for features available for loggedin users', function(){
       request(app)
         .get('/homePage')
         .set("cookie","gdgdgcgc;;;dbdg;")
-        .expect((res)=>{console.log(res.cookies);})
+        //.expect((res)=>{console.log(res.cookies);})
         .end(done)
     });
   });
@@ -361,7 +352,7 @@ describe('Testing for features available for loggedin users', function(){
           request(app)
             .get('/showSingleToDo')
             .set('Cookie','currentToDo = This is title;sessionid=1234')
-            .expect(/Sleep/)
+            .expect(/This is title/)
             .expect(200)
             .end(done)
         })
